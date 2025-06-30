@@ -89,7 +89,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, isCollapsed }) {
             {/* Navigation */}
             <nav className="flex flex-col gap-1">
                 {navItems.map(({ href, icon: Icon, label, name }) => {
-                    const isActive = route().current(name);
+                    const isActive = route().current(`${name}*`);
                     return (
                         <Link
                             key={label}
