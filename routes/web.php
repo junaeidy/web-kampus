@@ -3,19 +3,14 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\UploadController;
+use App\Http\Controllers\NavigationItemController;
 use App\Http\Controllers\Public\PageViewController;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -30,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('pages', PageController::class);
+    Route::resource('navigations', NavigationItemController::class);
 });
 
 Route::post('/admin/upload-image', [UploadController::class, 'upload'])->name('admin.upload.image');
