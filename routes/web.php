@@ -17,13 +17,6 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth'])->name('admin.dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('pages', PageController::class);
     Route::resource('navigations', NavigationItemController::class);
@@ -33,6 +26,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         'index', 'store', 'update', 'destroy', 'create', 'edit'
     ]);
     Route::resource('lecturers', LecturerController::class);
+    Route::get('/settings', [ProfileController::class, 'edit'])->name('settings.edit');
+    Route::patch('/settings', [ProfileController::class, 'update'])->name('settings.update');
+    Route::delete('/settings', [ProfileController::class, 'destroy'])->name('settings.destroy');
 });
 
 Route::post('/admin/upload-image', [UploadController::class, 'upload'])->name('admin.upload.image');

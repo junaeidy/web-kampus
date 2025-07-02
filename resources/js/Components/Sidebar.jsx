@@ -5,7 +5,6 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import {
     Squares2X2Icon,
     DocumentIcon,
-    UsersIcon,
     BuildingLibraryIcon,
     AcademicCapIcon,
     Cog6ToothIcon,
@@ -18,43 +17,37 @@ const navItems = [
         href: route("admin.dashboard"),
         icon: Squares2X2Icon,
         label: "Dashboard",
-        name: "admin.dashboard", // Tetap gunakan nama rute di sini
+        name: "admin.dashboard",
     },
     {
         href: "/admin/pages",
         icon: DocumentIcon,
         label: "Halaman",
-        name: "admin.pages", // Tetap gunakan nama rute di sini
+        name: "admin.pages",
     },
     {
         href: "/admin/navigations",
         icon: Bars3CenterLeftIcon,
         label: "Navigasi Menu",
-        name: "admin.navigations", // Tetap gunakan nama rute di sini
+        name: "admin.navigations",
     },
     {
         href: "/admin/faculties",
         icon: BuildingLibraryIcon,
         label: "Fakultas",
-        name: "admin.faculties", // Tetap gunakan nama rute di sini
+        name: "admin.faculties",
     },
     {
         href: "/admin/lecturers",
         icon: AcademicCapIcon,
         label: "Dosen",
-        name: "admin.lecturers", // Tetap gunakan nama rute di sini
-    },
-    {
-        href: "/admin/users",
-        icon: UsersIcon,
-        label: "Pengguna",
-        name: "admin.users", // Tetap gunakan nama rute di sini
+        name: "admin.lecturers",
     },
     {
         href: "/admin/settings",
         icon: Cog6ToothIcon,
         label: "Pengaturan",
-        name: "admin.settings", // Tetap gunakan nama rute di sini
+        name: "admin.settings",
     },
 ];
 

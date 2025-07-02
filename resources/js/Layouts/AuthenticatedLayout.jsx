@@ -6,10 +6,6 @@ import Dropdown from "@/Components/Dropdown";
 import {
     Bars3Icon,
     XMarkIcon,
-    BellIcon,
-    ChatBubbleLeftRightIcon,
-    EllipsisHorizontalCircleIcon,
-    MagnifyingGlassIcon,
     ChevronDoubleLeftIcon,
     ChevronDoubleRightIcon,
 } from "@heroicons/react/24/outline";
@@ -81,53 +77,18 @@ export default function AuthenticatedLayout({ header, children }) {
 
                     {/* Search + Icons + Profile */}
                     <div className="flex items-center space-x-4">
-                        <div className="relative hidden sm:block w-64">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            />
-                            <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        </div>
-
-                        <button className="text-gray-500 hover:text-gray-700 hidden sm:block">
-                            <BellIcon className="w-6 h-6" />
-                        </button>
-                        <button className="text-gray-500 hover:text-gray-700 hidden sm:block">
-                            <ChatBubbleLeftRightIcon className="w-6 h-6" />
-                        </button>
-                        <button className="text-gray-500 hover:text-gray-700 hidden sm:block">
-                            <EllipsisHorizontalCircleIcon className="w-6 h-6" />
-                        </button>
-
                         {/* User Dropdown */}
-                        <Dropdown>
-                            <Dropdown.Trigger>
-                                <button className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
-                                    <img
-                                        className="h-8 w-8 rounded-full object-cover mr-2"
-                                        src={`https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF`}
-                                        alt={user.name}
-                                    />
-                                    {user.name}
-                                </button>
-                            </Dropdown.Trigger>
-                            <Dropdown.Content>
-                                <Dropdown.Link href={route("profile.edit")}>
-                                    Profile
-                                </Dropdown.Link>
-                                <Dropdown.Link
-                                    href={route("logout")}
-                                    method="post"
-                                    as="button"
-                                >
-                                    Log Out
-                                </Dropdown.Link>
-                            </Dropdown.Content>
-                        </Dropdown>
+                        <div className="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
+                            <img
+                                className="h-8 w-8 rounded-full object-cover mr-2"
+                                src={`https://ui-avatars.com/api/?name=${user.name}&color=7F9CF5&background=EBF4FF`}
+                                alt={user.name}
+                            />
+                            {user.name}
+                        </div>
                     </div>
                 </header>
-                
+
                 <main className="flex-grow overflow-y-auto p-6 bg-gray-100">
                     {children}
                 </main>
