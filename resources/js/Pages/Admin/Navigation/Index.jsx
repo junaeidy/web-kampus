@@ -1,19 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, usePage, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import toast from 'react-hot-toast';
 import ConfirmDeleteModal from '@/Components/ConfirmDeleteModal';
 import NavigationFormModal from '@/Components/NavigationFormModal';
+import SortableNavigationItem from '@/Components/SortableNavigationItem';
+import {
+    DndContext,
+    closestCenter,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+    arrayMove,
+} from '@dnd-kit/sortable';
 
 export default function NavigationIndex() {
-    const { navigations = [], pages = [] } = usePage().props;
+    const { navigations: initialNavigations, pages = [] } = usePage().props;
+    const [items, setItems] = useState(initialNavigations);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedNav, setSelectedNav] = useState(null);
     const [deleteId, setDeleteId] = useState(null);
+    const [modalKey, setModalKey] = useState(0);
+
+    useEffect(() => {
+        setItems(initialNavigations);
+    }, [initialNavigations]);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        })
+    );
 
     const openModal = (nav = null) => {
         setSelectedNav(nav);
         setModalOpen(true);
+        if (!nav) {
+            setModalKey(prevKey => prevKey + 1);
+        }
     };
 
     const closeModal = () => {
@@ -27,9 +57,105 @@ export default function NavigationIndex() {
                 toast.success('Navigasi berhasil dihapus');
                 setDeleteId(null);
             },
-            onError: () => toast.error('Gagal menghapus navigasi'),
+            onError: () => {
+                toast.error('Gagal menghapus navigasi');
+                setDeleteId(null);
+            },
         });
     };
+
+    const flattenNavigation = (items, parentId = null) => {
+        return items.flatMap((item, index) => {
+            const flatItem = {
+                id: item.id,
+                order: index,
+                parent_id: parentId,
+            };
+            const children = item.children ? flattenNavigation(item.children, item.id) : [];
+            return [flatItem, ...children];
+        });
+    };
+
+    const findParent = (items, childId) => {
+        for (const item of items) {
+            if (item.children?.some(child => child.id === childId)) {
+                return item;
+            }
+        }
+        return null;
+    };
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (!over || active.id === over.id) return;
+
+        const allItems = items.flatMap(item => [
+            item,
+            ...(item.children || []),
+        ]);
+
+        const activeItem = allItems.find(i => i.id === active.id);
+        const overItem = allItems.find(i => i.id === over.id);
+
+        if (!activeItem || !overItem) return;
+
+        const activeParent = findParent(items, activeItem.id);
+        const overParent = findParent(items, overItem.id);
+
+        const isSameParent = activeParent?.id === overParent?.id;
+
+        if (!isSameParent) return;
+
+        const parent = activeParent || { children: items };
+        const siblings = parent.children || items;
+
+        const oldIndex = siblings.findIndex(i => i.id === activeItem.id);
+        const newIndex = siblings.findIndex(i => i.id === overItem.id);
+
+        const newSiblings = arrayMove(siblings, oldIndex, newIndex);
+
+        let newItems;
+        if (!activeParent) {
+            newItems = newSiblings;
+        } else {
+            newItems = items.map(i => {
+                if (i.id === parent.id) {
+                    return { ...i, children: newSiblings };
+                }
+                return i;
+            });
+        }
+        setItems(newItems);
+
+        const payload = flattenNavigation(newItems);
+        router.post(route('admin.navigations.reorder'), {
+            items: payload,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => toast.success('Urutan navigasi diperbarui'),
+            onError: () => toast.error('Gagal memperbarui urutan navigasi'),
+        });
+    };
+
+
+    const renderChildren = (children) => (
+        <SortableContext
+            items={children.map((child) => child.id)}
+            strategy={verticalListSortingStrategy}
+        >
+            <ul className="pl-6 mt-2 space-y-1 border-l">
+                {children.map((child) => (
+                    <SortableNavigationItem
+                        key={child.id}
+                        nav={child}
+                        onEdit={() => openModal(child)}
+                        onDelete={() => setDeleteId(child.id)}
+                    />
+                ))}
+            </ul>
+        </SortableContext>
+    );
 
     return (
         <AuthenticatedLayout header="Manajemen Navigasi">
@@ -46,60 +172,25 @@ export default function NavigationIndex() {
                     </button>
                 </div>
 
-                <ul className="space-y-2">
-                    {navigations.map(nav => (
-                        <li key={nav.id} className="border rounded p-4">
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <strong>{nav.label}</strong>
-                                    <div className="text-sm text-gray-500">
-                                        {nav.page ? `Halaman: ${nav.page.title}` : `URL: ${nav.url}`}
-                                    </div>
-                                </div>
-                                <div className="space-x-2">
-                                    <button
-                                        onClick={() => openModal(nav)}
-                                        className="text-blue-600 text-sm hover:underline"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => setDeleteId(nav.id)}
-                                        className="text-red-500 text-sm hover:underline"
-                                    >
-                                        Hapus
-                                    </button>
-                                </div>
-                            </div>
-
-                            {nav.children && nav.children.length > 0 && (
-                                <ul className="mt-2 pl-4 border-l space-y-1">
-                                    {nav.children.map(sub => (
-                                        <li key={sub.id} className="flex justify-between items-center text-sm">
-                                            <div>
-                                                {sub.label} - {sub.page ? `Halaman: ${sub.page.title}` : `URL: ${sub.url}`}
-                                            </div>
-                                            <div className="space-x-2">
-                                                <button
-                                                    onClick={() => openModal(sub)}
-                                                    className="text-blue-500 hover:underline"
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() => setDeleteId(sub.id)}
-                                                    className="text-red-400 hover:underline"
-                                                >
-                                                    Hapus
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext
+                        items={items.map((nav) => nav.id)}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        <ul className="space-y-2">
+                            {items.map((nav) => (
+                                <SortableNavigationItem
+                                    key={nav.id}
+                                    nav={nav}
+                                    onEdit={() => openModal(nav)}
+                                    onDelete={() => setDeleteId(nav.id)}
+                                >
+                                    {nav.children && nav.children.length > 0 && renderChildren(nav.children)}
+                                </SortableNavigationItem>
+                            ))}
+                        </ul>
+                    </SortableContext>
+                </DndContext>
             </div>
 
             <ConfirmDeleteModal
@@ -110,11 +201,12 @@ export default function NavigationIndex() {
             />
 
             <NavigationFormModal
+                key={modalKey}
                 isOpen={modalOpen}
                 onClose={closeModal}
                 navigation={selectedNav}
                 pages={pages}
-                navigations={navigations}
+                navigations={initialNavigations}
             />
         </AuthenticatedLayout>
     );

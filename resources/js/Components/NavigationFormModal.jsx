@@ -25,20 +25,22 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
         }
     }, [navigation]);
 
+    useEffect(() => {
+        if (!isOpen) {
+            reset();
+        }
+    }, [isOpen]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const method = navigation ? put : post;
         const routeName = navigation ? route('admin.navigations.update', navigation.id) : route('admin.navigations.store');
 
-        const cleanedData = { 
+        const cleanedData = {
             ...data,
             page_id: data.page_id === '' ? null : data.page_id,
             parent_id: data.parent_id === '' ? null : data.parent_id,
         };
-        
-        if (navigation) {
-            console.log('Navigation ID:', navigation.id);
-        }
 
         method(routeName, {
             ...cleanedData,
@@ -55,7 +57,13 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            <Dialog as="div" className="relative z-50" onClose={onClose}>
+            <Dialog
+                as="div"
+                className="relative z-50"
+                onClose={() => {
+                    onClose();
+                }}
+            >
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -145,7 +153,9 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
                                     <div className="flex justify-end gap-2">
                                         <button
                                             type="button"
-                                            onClick={onClose}
+                                            onClick={() => {
+                                                onClose();
+                                            }}
                                             className="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200"
                                         >
                                             Batal

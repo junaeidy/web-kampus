@@ -2,7 +2,6 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Foundation\Application;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +25,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('pages', PageController::class);
     Route::resource('navigations', NavigationItemController::class);
+    Route::get('navigations/sort', [NavigationItemController::class, 'sort'])->name('navigations.sort');
+    Route::post('/navigations/reorder', [NavigationItemController::class, 'reorder'])->name('navigations.reorder');
 });
 
 Route::post('/admin/upload-image', [UploadController::class, 'upload'])->name('admin.upload.image');

@@ -40,7 +40,7 @@ class NavigationItemController extends Controller
 
         NavigationItem::create($validated);
 
-        return back()->with('success', 'Menu berhasil ditambahkan.');
+        return redirect()->route('admin.navigations.index')->with('success', 'Menu berhasil ditambahkan.');
     }
 
 
@@ -57,14 +57,32 @@ class NavigationItemController extends Controller
 
         $navigation->update($validated);
 
-        return back()->with('success', 'Menu berhasil diperbarui.');
+        return redirect()->route('admin.navigations.index')->with('success', 'Menu berhasil diperbarui.');
     }
 
+    public function reorder(Request $request)
+    {
+        $validated = $request->validate([
+            'items' => 'required|array',
+            'items.*.id' => 'required|exists:navigation_items,id',
+            'items.*.order' => 'required|integer',
+            'items.*.parent_id' => 'nullable|exists:navigation_items,id',
+        ]);
+
+        foreach ($validated['items'] as $item) {
+            NavigationItem::where('id', $item['id'])->update([
+                'order' => $item['order'],
+                'parent_id' => $item['parent_id'] ?? null,
+            ]);
+        }
+
+        return redirect()->route('admin.navigations.index')->with('success', 'Navigasi berhasil diperbarui.');
+    }
 
 
     public function destroy(NavigationItem $navigation)
     {
         $navigation->delete();
-        return back()->with('success', 'Menu berhasil dihapus.');
+        return redirect()->route('admin.navigations.index')->with('success', 'Menu berhasil dihapus.');
     }
 }

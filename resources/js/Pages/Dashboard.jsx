@@ -51,13 +51,7 @@ export default function Dashboard() {
     ];
 
     return (
-        <AuthenticatedLayout
-            header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Dashboard
-                </h2>
-            }
-        >
+        <AuthenticatedLayout>
             <Head title="Dashboard" />
 
             <div className="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
