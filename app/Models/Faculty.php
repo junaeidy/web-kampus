@@ -11,4 +11,9 @@ class Faculty extends Model
         'description',
         'logo_path',
     ];
+
+    public function lecturers()
+    {
+        return $this->hasMany(Lecturer::class);
+    }
 }
