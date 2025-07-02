@@ -9,6 +9,7 @@ export default function CreatePage() {
         title: "",
         slug: "",
         content: "",
+        section_type: "default",
         is_active: true,
     });
 
@@ -170,6 +171,28 @@ export default function CreatePage() {
                         {errors.content && (
                             <p className="text-red-500 text-sm mt-1">
                                 {errors.content}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                            Jenis Konten Halaman
+                        </label>
+                        <select
+                            value={data.section_type}
+                            onChange={(e) =>
+                                setData("section_type", e.target.value)
+                            }
+                            className="w-full border-gray-300 rounded shadow-sm"
+                        >
+                            <option value="default">Konten Bebas</option>
+                            <option value="lecturers">Daftar Dosen</option>
+                            {/* Kamu bisa tambah opsi lain seperti fakultas, berita, dsb nanti */}
+                        </select>
+                        {errors.section_type && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {errors.section_type}
                             </p>
                         )}
                     </div>

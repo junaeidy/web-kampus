@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class Page extends Model
 {
-    protected $fillable = ['title', 'slug', 'content', 'is_active'];
+    protected $fillable = ['title', 'slug', 'content', 'is_active', 'section_type'];
 
     protected static function booted()
     {

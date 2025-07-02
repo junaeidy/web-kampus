@@ -3,8 +3,9 @@ import { Head, Link, router, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import ConfirmDeleteModal from "@/Components/ConfirmDeleteModal";
 import { toast } from "react-hot-toast";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
-export default function Index() {
+export default function LecturerIndex() {
     const { lecturers, filters } = usePage().props;
     const [search, setSearch] = useState(filters.search || "");
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -12,7 +13,11 @@ export default function Index() {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get(route("admin.lecturers.index"), { search }, { preserveState: true });
+        router.get(
+            route("admin.lecturers.index"),
+            { search },
+            { preserveState: true }
+        );
     };
 
     const confirmDelete = (item) => {
@@ -31,106 +36,153 @@ export default function Index() {
         <AuthenticatedLayout header="Manajemen Dosen">
             <Head title="Manajemen Dosen" />
 
-            <div className="bg-white shadow rounded-lg p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">Dosen</h1>
+            <div className="bg-white shadow rounded-lg p-6 space-y-6">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-xl font-semibold text-gray-800">
+                        Daftar Dosen
+                    </h1>
                     <Link
                         href={route("admin.lecturers.create")}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
                     >
                         + Tambah Dosen
                     </Link>
                 </div>
 
-                <form onSubmit={handleSearch} className="flex items-center gap-2">
+                {/* Form Pencarian */}
+                <form onSubmit={handleSearch}>
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Cari dosen..."
-                        className="border px-3 py-2 rounded w-full max-w-sm"
+                        className="w-full md:w-1/3 border-gray-300 rounded shadow-sm"
                     />
-                    <button type="submit" className="bg-gray-700 text-white px-4 py-2 rounded">
-                        Cari
-                    </button>
                 </form>
 
-                <div className="overflow-x-auto bg-white rounded shadow">
-                    <table className="w-full text-left">
-                        <thead className="bg-gray-100">
-                            <tr>
-                                <th className="p-3 border-b">No</th>
-                                <th className="p-3 border-b">Foto</th>
-                                <th className="p-3 border-b">Nama</th>
-                                <th className="p-3 border-b">Jabatan</th>
-                                <th className="p-3 border-b">Fakultas</th>
-                                <th className="p-3 border-b">Aksi</th>
+                {/* Tabel Dosen */}
+                <div className="overflow-x-auto">
+                    <table className="min-w-full bg-white border border-gray-200">
+                        <thead>
+                            <tr className="bg-gray-100 text-gray-700 text-sm">
+                                <th className="px-4 py-2 border">No</th>
+                                <th className="px-4 py-2 border">Foto</th>
+                                <th className="px-4 py-2 border text-left">
+                                    Nama
+                                </th>
+                                <th className="px-4 py-2 border text-left">
+                                    Jabatan
+                                </th>
+                                <th className="px-4 py-2 border text-left">
+                                    Fakultas
+                                </th>
+                                <th className="px-4 py-2 border text-center">
+                                    Aksi
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {lecturers.data.length === 0 && (
+                            {lecturers.data.length === 0 ? (
                                 <tr>
-                                    <td colSpan="6" className="p-4 text-center text-gray-500">
-                                        Tidak ada data.
+                                    <td
+                                        colSpan="6"
+                                        className="text-center py-4 text-gray-500"
+                                    >
+                                        Tidak ada data dosen.
                                     </td>
                                 </tr>
+                            ) : (
+                                lecturers.data.map((lecturer, index) => (
+                                    <tr
+                                        key={lecturer.id}
+                                        className="text-sm text-gray-800 hover:bg-gray-50"
+                                    >
+                                        <td className="px-4 py-2 border text-center">
+                                            {lecturers.from + index}
+                                        </td>
+                                        <td className="px-4 py-2 border text-center">
+                                            {lecturer.photo_path ? (
+                                                <img
+                                                    src={`/storage/${lecturer.photo_path}`}
+                                                    alt={lecturer.name}
+                                                    className="h-10 w-10 object-cover rounded-full mx-auto"
+                                                />
+                                            ) : (
+                                                <span className="text-gray-400 italic">
+                                                    -
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            {lecturer.name}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            {lecturer.position}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            {lecturer.faculty?.name || "-"}
+                                        </td>
+                                        <td className="px-4 py-2 border text-center space-x-2">
+                                            <Link
+                                                href={route(
+                                                    "admin.lecturers.edit",
+                                                    lecturer.id
+                                                )}
+                                                className="inline-flex items-center justify-center text-blue-500 hover:text-blue-600 relative group"
+                                            >
+                                                <PencilSquareIcon className="w-5 h-5" />
+                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                                                    Edit
+                                                </span>
+                                            </Link>
+
+                                            <button
+                                                onClick={() =>
+                                                    confirmDelete(lecturer)
+                                                }
+                                                className="inline-flex items-center justify-center text-red-500 hover:text-red-700 relative group"
+                                            >
+                                                <TrashIcon className="w-5 h-5" />
+                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
+                                                    Hapus
+                                                </span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
                             )}
-                            {lecturers.data.map((lecturer, index) => (
-                                <tr key={lecturer.id} className="border-t">
-                                    <td className="p-3">{lecturers.from + index}</td>
-                                    <td className="p-3">
-                                        {lecturer.photo_path ? (
-                                            <img
-                                                src={`/storage/${lecturer.photo_path}`}
-                                                alt={lecturer.name}
-                                                className="h-10 w-10 object-cover rounded-full"
-                                            />
-                                        ) : (
-                                            <span className="text-gray-400 italic">-</span>
-                                        )}
-                                    </td>
-                                    <td className="p-3">{lecturer.name}</td>
-                                    <td className="p-3">{lecturer.position}</td>
-                                    <td className="p-3">{lecturer.faculty?.name || "-"}</td>
-                                    <td className="p-3 flex gap-2">
-                                        <Link
-                                            href={route("admin.lecturers.edit", lecturer.id)}
-                                            className="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500"
-                                        >
-                                            Edit
-                                        </Link>
-                                        <button
-                                            onClick={() => confirmDelete(lecturer)}
-                                            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                                        >
-                                            Hapus
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
                         </tbody>
                     </table>
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-between items-center text-sm text-gray-600">
-                    <div>
-                        Menampilkan {lecturers.from} - {lecturers.to} dari {lecturers.total} data
-                    </div>
-                    <div className="flex gap-1">
-                        {lecturers.links.map((link, idx) => (
-                            <Link
-                                key={idx}
-                                href={link.url || ""}
-                                className={`px-3 py-1 rounded ${link.active
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                {lecturers.links.length > 1 && (
+                    <div className="mt-4 flex justify-between text-sm text-gray-600">
+                        <div>
+                            Menampilkan {lecturers.from} - {lecturers.to} dari{" "}
+                            {lecturers.total} data
+                        </div>
+                        <div className="flex gap-1">
+                            {lecturers.links.map((link, index) => (
+                                <button
+                                    key={index}
+                                    disabled={!link.url}
+                                    onClick={() =>
+                                        link.url && router.get(link.url)
+                                    }
+                                    className={`px-3 py-1 rounded ${
+                                        link.active
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                                     }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                            />
-                        ))}
+                                    dangerouslySetInnerHTML={{
+                                        __html: link.label,
+                                    }}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             <ConfirmDeleteModal

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Head, Link, usePage, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import toast from "react-hot-toast";
@@ -10,15 +10,26 @@ import {
 } from "@heroicons/react/24/outline";
 
 export default function PageIndex() {
-    const { pages } = usePage().props;
+    const { pages, filters } = usePage().props;
+
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
+    const [search, setSearch] = useState(filters.search || "");
 
     const handleDelete = () => {
         router.delete(route("admin.pages.destroy", selectedId), {
             onSuccess: () => toast.success("Halaman berhasil dihapus"),
             onError: () => toast.error("Gagal menghapus halaman"),
         });
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        router.get(
+            route("admin.pages.index"),
+            { search },
+            { preserveState: true }
+        );
     };
 
     return (
@@ -37,6 +48,17 @@ export default function PageIndex() {
                         + Tambah Halaman
                     </Link>
                 </div>
+
+                {/* Search Form */}
+                <form onSubmit={handleSearch} className="mb-4">
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Cari berdasarkan judul atau slug..."
+                        className="w-full md:w-1/3 border-gray-300 rounded shadow-sm"
+                    />
+                </form>
 
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-gray-200">
@@ -64,7 +86,7 @@ export default function PageIndex() {
                                         colSpan="5"
                                         className="text-center py-4 text-gray-500"
                                     >
-                                        Belum ada halaman.
+                                        Tidak ada halaman yang ditemukan.
                                     </td>
                                 </tr>
                             ) : (
@@ -74,7 +96,7 @@ export default function PageIndex() {
                                         className="text-sm text-gray-800 hover:bg-gray-50"
                                     >
                                         <td className="px-4 py-2 border text-center">
-                                            {index + 1}
+                                            {pages.from + index}
                                         </td>
                                         <td className="px-4 py-2 border">
                                             {page.title}
@@ -103,7 +125,7 @@ export default function PageIndex() {
                                                 className="inline-flex items-center justify-center text-blue-600 hover:text-blue-800 relative group"
                                             >
                                                 <EyeIcon className="w-5 h-5" />
-                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
                                                     Lihat
                                                 </span>
                                             </a>
@@ -116,7 +138,7 @@ export default function PageIndex() {
                                                 className="inline-flex items-center justify-center text-blue-600 hover:text-blue-800 relative group"
                                             >
                                                 <PencilSquareIcon className="w-5 h-5" />
-                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
                                                     Edit
                                                 </span>
                                             </Link>
@@ -129,7 +151,7 @@ export default function PageIndex() {
                                                 className="inline-flex items-center justify-center text-red-500 hover:text-red-700 relative group"
                                             >
                                                 <TrashIcon className="w-5 h-5" />
-                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap">
+                                                <span className="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10">
                                                     Hapus
                                                 </span>
                                             </button>
@@ -140,6 +162,35 @@ export default function PageIndex() {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination */}
+                {pages.links.length > 1 && (
+                    <div className="mt-4 flex justify-between text-sm text-gray-600">
+                        <div>
+                            Menampilkan {pages.from} - {pages.to} dari{" "}
+                            {pages.total} data
+                        </div>
+                        <div className="flex gap-1">
+                            {pages.links.map((link, index) => (
+                                <button
+                                    key={index}
+                                    disabled={!link.url}
+                                    onClick={() =>
+                                        link.url && router.get(link.url)
+                                    }
+                                    className={`px-3 py-1 text-sm rounded ${
+                                        link.active
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
+                                    dangerouslySetInnerHTML={{
+                                        __html: link.label,
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
             <ConfirmDeleteModal
