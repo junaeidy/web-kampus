@@ -18,48 +18,47 @@ const navItems = [
         href: route("admin.dashboard"),
         icon: Squares2X2Icon,
         label: "Dashboard",
-        name: "admin.dashboard",
+        name: "admin.dashboard", // Tetap gunakan nama rute di sini
     },
     {
         href: "/admin/pages",
         icon: DocumentIcon,
         label: "Halaman",
-        name: "admin.pages",
+        name: "admin.pages", // Tetap gunakan nama rute di sini
     },
     {
         href: "/admin/navigations",
         icon: Bars3CenterLeftIcon,
         label: "Navigasi Menu",
-        name: "admin.navigations",
+        name: "admin.navigations", // Tetap gunakan nama rute di sini
     },
     {
         href: "/admin/faculties",
         icon: BuildingLibraryIcon,
         label: "Fakultas",
-        name: "admin.faculties",
+        name: "admin.faculties", // Tetap gunakan nama rute di sini
     },
     {
         href: "/admin/lecturers",
         icon: AcademicCapIcon,
         label: "Dosen",
-        name: "admin.lecturers",
+        name: "admin.lecturers", // Tetap gunakan nama rute di sini
     },
     {
         href: "/admin/users",
         icon: UsersIcon,
         label: "Pengguna",
-        name: "admin.users",
+        name: "admin.users", // Tetap gunakan nama rute di sini
     },
     {
         href: "/admin/settings",
         icon: Cog6ToothIcon,
         label: "Pengaturan",
-        name: "admin.settings",
+        name: "admin.settings", // Tetap gunakan nama rute di sini
     },
 ];
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen, isCollapsed }) {
-    const { url, component } = usePage();
     const [tooltipContent, setTooltipContent] = useState('');
     const [showTooltip, setShowTooltip] = useState(false);
     const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -84,7 +83,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, isCollapsed }) {
         <aside
             className={`bg-white text-gray-800 ${
                 isCollapsed ? "w-20" : "w-64"
-            } space-y-6 py-6 px-4 fixed inset-y-0 left-0 transform ${
+            } space-y-6 py-6 px-4 fixed inset-y-0 left-0 h-screen overflow-y-auto transform ${
                 sidebarOpen ? "translate-x-0" : "-translate-x-full"
             } md:relative md:translate-x-0 transition-all duration-200 ease-in-out z-30 shadow-xl md:shadow-none rounded-r-2xl md:rounded-r-none`}
         >
@@ -113,7 +112,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, isCollapsed }) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex flex-col gap-2 flex-grow">
+            <nav className="flex flex-col gap-2 flex-grow overflow-y-auto">
                 {navItems.map(({ href, icon: Icon, label, name }) => {
                     const isActive = route().current(`${name}*`);
                     return (
@@ -142,7 +141,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, isCollapsed }) {
             </nav>
 
             {/* Logout */}
-            <div className="mt-auto border-t border-gray-100 pt-4">
+            <div className="mt-auto border-t border-gray-100 pt-4 flex-shrink-0">
                 <Link
                     href={route("logout")}
                     method="post"

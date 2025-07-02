@@ -22,24 +22,29 @@ export default function AuthenticatedLayout({ header, children }) {
     return (
         <div className="flex min-h-screen bg-gray-100">
             {/* Sidebar */}
-            <Sidebar
-                sidebarOpen={sidebarOpen}
-                setSidebarOpen={setSidebarOpen}
-                isCollapsed={isCollapsed}
-            />
+            <div
+                className={`relative z-40 ${
+                    isCollapsed ? "w-20" : "w-64"
+                } transition-all duration-200 ease-in-out flex-shrink-0`}
+            >
+                <Sidebar
+                    sidebarOpen={sidebarOpen}
+                    setSidebarOpen={setSidebarOpen}
+                    isCollapsed={isCollapsed}
+                />
+            </div>
 
             {/* Overlay for mobile */}
             <div
                 onClick={() => setSidebarOpen(false)}
-                className={`fixed inset-0 bg-black bg-opacity-25 z-20 md:hidden transition-opacity duration-300 ${
+                className={`fixed inset-0 bg-black bg-opacity-25 z-30 md:hidden transition-opacity duration-300 ${
                     sidebarOpen ? "block" : "hidden"
                 }`}
             ></div>
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <header className="flex justify-between items-center bg-white border-b border-gray-200 px-4 py-3 shadow-sm z-20">
-                    {/* Sidebar Collapse Button (desktop) */}
+            <div className="flex-1 flex flex-col overflow-hidden max-h-screen">
+                <header className="flex justify-between items-center bg-white border-b border-gray-200 px-4 py-3 shadow-sm z-20 flex-shrink-0">
                     <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
                         className="hidden md:inline-flex text-gray-500 hover:text-gray-700"
@@ -122,8 +127,8 @@ export default function AuthenticatedLayout({ header, children }) {
                         </Dropdown>
                     </div>
                 </header>
-
-                <main className="flex-1 overflow-x-hidden overflow-y-auto p-6 bg-gray-100">
+                
+                <main className="flex-grow overflow-y-auto p-6 bg-gray-100">
                     {children}
                 </main>
             </div>
