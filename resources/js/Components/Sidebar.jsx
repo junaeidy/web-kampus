@@ -10,6 +10,7 @@ import {
     Cog6ToothIcon,
     ArrowRightOnRectangleIcon,
     Bars3CenterLeftIcon,
+    NewspaperIcon,
 } from "@heroicons/react/24/outline";
 
 const navItems = [
@@ -42,6 +43,12 @@ const navItems = [
         icon: AcademicCapIcon,
         label: "Dosen",
         name: "admin.lecturers",
+    },
+    {
+        href: "/admin/news",
+        icon: NewspaperIcon,
+        label: "Berita",
+        name: "admin.news",
     },
     {
         href: "/admin/settings",
