@@ -24,4 +24,11 @@ class News extends Model
             }
         });
     }
+
+    public function getThumbnailUrlAttribute()
+    {
+        return $this->thumbnail_path
+            ? asset('storage/' . $this->thumbnail_path)
+            : '/images/news-default.jpg';
+    }
 }

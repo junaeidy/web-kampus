@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useForm, Link, Head } from '@inertiajs/react';
+import { useForm, Link, Head, router } from '@inertiajs/react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { toast } from "react-hot-toast";
 
@@ -193,7 +193,8 @@ const ContentFields = ({ sectionType, content, index, handleContentChange, multi
 function Edit({ homeSection }) {
   const initialContents = homeSection.contents.map(content => ({
     ...content,
-    image: content.image_url ? content.image : null,
+    image: null, // Jangan isi string di sini
+  image_url: content.image_url ?? null,
   }));
 
   const { data, setData, put, processing, errors } = useForm({
@@ -245,19 +246,36 @@ function Edit({ homeSection }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let finalContents = data.contents;
-    if (!data.multiple_content && data.contents.length === 0) {
-      finalContents = [{ headline: '', description: '', image: null, title: '', button_text: '', cta_link: '' }];
-    } else if (!data.multiple_content && data.contents.length > 1) {
-      finalContents = [data.contents[0]];
-    }
 
-    setData(prev => ({ ...prev, contents: finalContents }));
-    put(route('admin.home.sections.update', homeSection.id),{
-        onSuccess: () => toast.success("Beranda berhasil diubah."),
-        onError: () => toast.error("Gagal mengubah beranda."),
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+
+    formData.append('section_type', data.section_type);
+    formData.append('order', data.order);
+    formData.append('multiple_content', data.multiple_content ? '1' : '0');
+    formData.append('is_visible', '1');
+
+    data.contents.forEach((content, index) => {
+      if (content.id) formData.append(`contents[${index}][id]`, content.id);
+      formData.append(`contents[${index}][headline]`, content.headline ?? '');
+      formData.append(`contents[${index}][description]`, content.description ?? '');
+      formData.append(`contents[${index}][title]`, content.title ?? '');
+      formData.append(`contents[${index}][button_text]`, content.button_text ?? '');
+      formData.append(`contents[${index}][cta_link]`, content.cta_link ?? '');
+
+      if (content.image instanceof File) {
+        formData.append(`contents[${index}][image]`, content.image);
+      } else if (content.image === null) {
+        formData.append(`contents[${index}][image]`, '');
+      }
+    });
+
+    router.post(route('admin.home.sections.update', homeSection.id), formData, {
+      onSuccess: () => toast.success("Beranda berhasil diubah."),
+      onError: () => toast.error("Gagal mengubah beranda."),
     });
   };
+
 
   return (
     <AuthenticatedLayout header="Edit Bagian Beranda">
