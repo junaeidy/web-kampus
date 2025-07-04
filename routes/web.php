@@ -10,8 +10,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\NavigationItemController;
-use App\Http\Controllers\Public\PageViewController;
 use App\Http\Controllers\Public\NewsViewController;
+use App\Http\Controllers\Public\PageViewController;
+use App\Http\Controllers\Admin\HomeSectionController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -32,6 +33,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::patch('/settings', [ProfileController::class, 'update'])->name('settings.update');
     Route::delete('/settings', [ProfileController::class, 'destroy'])->name('settings.destroy');
     Route::resource('news', NewsController::class);
+    Route::get('/home-sections', [HomeSectionController::class, 'index'])->name('home.sections.index');
+    Route::get('/home-sections/create', [HomeSectionController::class, 'create'])->name('home.sections.create');
+    Route::post('/home-sections', [HomeSectionController::class, 'store'])->name('home.sections.store');
+    Route::get('/home-sections/{homeSection}/edit', [HomeSectionController::class, 'edit'])->name('home.sections.edit');
+    Route::put('/home-sections/{homeSection}', [HomeSectionController::class, 'update'])->name('home.sections.update');
+    Route::delete('/home-sections/{homeSection}', [HomeSectionController::class, 'destroy'])->name('home.sections.destroy');
 });
 
 Route::post('/admin/upload-image', [UploadController::class, 'upload'])->name('admin.upload.image');
