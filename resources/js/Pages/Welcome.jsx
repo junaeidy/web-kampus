@@ -12,6 +12,8 @@ import ScrollToTopButton from '@/Components/ScrollToTopButton';
 export default function Home({ navigations, news, faculties, sections }) {
     const heroSection = sections.find(section => section.section_type === 'hero');
     const aboutSection = sections.find(section => section.section_type === 'about');
+    const callToActionSection = sections.find(section => section.section_type === 'call_to_action');
+    const cta = callToActionSection?.contents?.[0];
 
     return (
         <div>
@@ -21,7 +23,7 @@ export default function Home({ navigations, news, faculties, sections }) {
             {heroSection && <HeroSection data={heroSection.contents} />}
             <FeatureCards />
             {aboutSection && <AboutSection data={aboutSection} />}
-            <CallToActionSection />
+            {cta && <CallToActionSection data={cta} />}
             <LatestNewsSection news={news} />
             <Footer news={news} faculties={faculties} />
             <ScrollToTopButton />
