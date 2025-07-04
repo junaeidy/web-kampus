@@ -10,15 +10,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\NavigationItemController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Public\NewsViewController;
 use App\Http\Controllers\Public\PageViewController;
 use App\Http\Controllers\Admin\HomeSectionController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth'])->name('admin.dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('admin.dashboard');
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('pages', PageController::class);
