@@ -1,34 +1,62 @@
 import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
 export default function AboutSection({ data }) {
-    const content = data.contents?.[0];
+    const contents = data.contents || [];
 
-    if (!content) return null;
+    if (contents.length === 0) return null;
+
+    const renderContent = (content) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="lg:pr-8 max-w-full lg:max-w-xl mx-auto lg:mx-0">
+                <span className="inline-block bg-custom-blue text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                    Tentang Kami
+                </span>
+                <h2 className="text-4xl font-bold text-gray-800 leading-tight mb-6">
+                    {content.headline || "Judul default"}
+                </h2>
+                <p className="text-gray-600 leading-relaxed mb-8">
+                    {content.description || "Deskripsi tidak tersedia."}
+                </p>
+            </div>
+
+            <div className="flex justify-center items-center">
+                <img
+                    src={`/storage/${content.image}`}
+                    alt="Gambar Kampus"
+                    className="w-full h-auto object-cover rounded-lg shadow-md max-h-[450px]"
+                />
+            </div>
+        </div>
+    );
 
     return (
         <section className="bg-white py-16 px-4">
             <div className="max-w-6xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                    <div className="lg:pr-8 max-w-full lg:max-w-xl mx-auto lg:mx-0">
-                        <span className="inline-block bg-custom-blue text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
-                            Tentang Kami
-                        </span>
-                        <h2 className="text-4xl font-bold text-gray-800 leading-tight mb-6">
-                            {content.headline || "Judul default"}
-                        </h2>
-                        <p className="text-gray-600 leading-relaxed mb-8">
-                            {content.description || "Deskripsi tidak tersedia."}
-                        </p>
-                    </div>
-
-                    <div className="flex justify-center items-center">
-                        <img
-                            src={`/storage/${content.image}`}
-                            alt="Gambar Kampus"
-                            className="w-full h-auto object-cover rounded-lg shadow-md max-h-[450px]"
-                        />
-                    </div>
-                </div>
+                {contents.length === 1 ? (
+                    renderContent(contents[0])
+                ) : (
+                    <Swiper
+                        modules={[Autoplay, Pagination]}
+                        autoplay={{
+                            delay: 6000,
+                            disableOnInteraction: false,
+                        }}
+                        loop={true}
+                        speed={1000}
+                        pagination={{ clickable: true }}
+                        slidesPerView={1}
+                    >
+                        {contents.map((content, index) => (
+                            <SwiperSlide key={index}>
+                                {renderContent(content)}
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                )}
             </div>
         </section>
     );
