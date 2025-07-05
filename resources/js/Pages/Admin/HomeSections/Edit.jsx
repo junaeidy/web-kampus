@@ -264,10 +264,10 @@ function Edit({ homeSection }) {
       formData.append(`contents[${index}][cta_link]`, content.cta_link ?? '');
 
       if (content.image instanceof File) {
-        formData.append(`contents[${index}][image]`, content.image);
-      } else if (content.image === null) {
-        formData.append(`contents[${index}][image]`, '');
-      }
+  formData.append(`contents[${index}][image]`, content.image);
+} else if (content.image === null && !content.image_url) {
+  formData.append(`contents[${index}][image]`, '');
+}
     });
 
     router.post(route('admin.home.sections.update', homeSection.id), formData, {
