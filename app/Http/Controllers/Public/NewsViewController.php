@@ -12,11 +12,19 @@ use App\Http\Controllers\Controller;
 
 class NewsViewController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        $news = News::where('is_active', true)
-            ->latest()
-            ->paginate(6);
+        $query = News::where('is_active', true);
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        $news = $query->latest()->paginate(6)->withQueryString();
 
         $navigations = NavigationItem::with(['page', 'children.page'])
             ->whereNull('parent_id')
@@ -46,8 +54,10 @@ class NewsViewController extends Controller
                 'img' => $item->thumbnail_url,
                 'url' => route('public.news.show', $item->slug),
             ]),
+            'search' => $request->search,
         ]);
     }
+
 
     public function show($slug)
     {

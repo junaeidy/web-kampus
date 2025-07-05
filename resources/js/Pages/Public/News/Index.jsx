@@ -1,13 +1,22 @@
-import React from 'react';
-import { Link, Head, usePage } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { Link, Head, usePage, router } from '@inertiajs/react';
 import Navbar from '@/Components/User/Navbar';
 import Footer from '@/Components/User/Footer';
 import HeroSectionWithContent from '@/Components/User/HeroSectionWithContent';
 import ScrollToTopButton from '@/Components/ScrollToTopButton';
 import { CalendarDays, Search } from 'lucide-react'; 
 
-export default function NewsIndex({ pages, navigations, faculties, recentNews }) {
-    const { news } = usePage().props; 
+export default function NewsIndex({ pages, navigations, faculties, recentNews, search  }) {
+    const { news } = usePage().props;
+    const [searchQuery, setSearchQuery] = useState(search || '');
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        router.get(route('public.news.index'), { search: searchQuery }, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    };
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -118,16 +127,20 @@ export default function NewsIndex({ pages, navigations, faculties, recentNews })
                         {/* Widget Search */}
                         <div className="bg-white p-6 rounded-lg shadow-md">
                             <h4 className="text-lg font-bold text-gray-800 mb-4">Cari Berita Di Sini</h4>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    placeholder="Cari..."
-                                    className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent"
-                                />
-                                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-custom-blue">
-                                    <Search className="w-5 h-5" />
-                                </button>
-                            </div>
+                            <form onSubmit={handleSearch}>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        placeholder="Cari..."
+                                        className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent"
+                                    />
+                                    <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-custom-blue">
+                                        <Search className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </form>
                         </div>
 
                         <div className="bg-white p-6 rounded-lg shadow-md">
