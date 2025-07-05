@@ -1,13 +1,16 @@
 import React, { useState, Fragment } from "react";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { Dialog, Transition } from "@headlessui/react";
+import Navbar from '@/Components/User/Navbar';
+import Footer from '@/Components/User/Footer';
+import ScrollToTopButton from '@/Components/ScrollToTopButton';
 
-export default function PublicPage() {
+export default function PublicPage({ pages, navigations, faculties, recentNews }) {
     const { page, lecturers = [] } = usePage().props;
     const [selectedLecturer, setSelectedLecturer] = useState(null);
 
     const truncateWords = (text, count) => {
-        const plain = text.replace(/<[^>]*>/g, "");
+        const plain = text ? text.replace(/<[^>]*>/g, "") : "";
         const words = plain.split(/\s+/);
         return (
             words.slice(0, count).join(" ") + (words.length > count ? "…" : "")
@@ -15,47 +18,93 @@ export default function PublicPage() {
     };
 
     return (
-        <div className="min-h-screen bg-white px-6 py-12 max-w-5xl mx-auto">
+        <div className="min-h-screen flex flex-col">
             <Head title={page.title} />
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                {page.title}
-            </h1>
-
-            {page.section_type === "lecturers" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {lecturers.map((lecturer) => (
-                        <div
-                            key={lecturer.id}
-                            onClick={() => setSelectedLecturer(lecturer)}
-                            className="cursor-pointer border rounded-lg p-4 shadow hover:shadow-md transition"
-                        >
-                            {lecturer.photo_path && (
-                                <img
-                                    src={`/storage/${lecturer.photo_path}`}
-                                    alt={lecturer.name}
-                                    className="h-40 w-full object-contain mb-4"
-                                />
-                            )}
-                            <h3 className="text-xl font-semibold text-gray-800">
-                                {lecturer.name}
-                            </h3>
-                            <p className="text-sm text-gray-600 mb-2">
-                                {lecturer.position}
-                            </p>
-                            <p className="text-sm text-gray-700">
-                                {truncateWords(lecturer.bio || "", 15)}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            ) : (
+            <Navbar navigations={navigations} pages={pages} />
+            <section
+                className="relative bg-custom-blue text-white flex items-center justify-center overflow-hidden text-center"
+                style={{
+                    minHeight: '40vh',
+                    marginTop: '72px',
+                }}
+            >
                 <div
-                    className="prose max-w-none"
-                    dangerouslySetInnerHTML={{ __html: page.content }}
-                />
-            )}
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{
+                        backgroundImage: "url('https://images.pexels.com/photos/32832428/pexels-photo-32832428/free-photo-of-cozy-reading-moment-with-coffee-and-book.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
+                        backgroundAttachment: 'fixed',
+                    }}
+                >
+                    <div className="absolute inset-0 bg-gray-900 opacity-90"></div>
+                </div>
 
-            {/* Modal Detail Dosen */}
+                <div className="relative z-10 p-4 max-w-3xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
+                        {page.title}
+                    </h1>
+                    <div className="h-1 w-24 bg-custom-green mx-auto mb-6"></div>
+
+                    <div className="text-lg flex justify-center items-center gap-2">
+                        <Link href={route('home')} className="text-white hover:text-gray-300 transition-colors">Beranda</Link>
+                        <span>/</span>
+                        <span className="text-custom-green">{page.title.length > 30 ? page.title.substring(0, 30) + '...' : page.title}</span>
+                    </div>
+                </div>
+            </section>
+
+            <main className="flex-grow bg-section-bg py-16 px-4">
+                <div className="container mx-auto max-w-5xl bg-white p-8 rounded-lg shadow-md">
+                    {page.section_type === "lecturers" ? (
+                        <>
+                            {page.content && (
+                                <div className="prose max-w-none prose-lg text-gray-800 leading-relaxed mb-12"
+                                     dangerouslySetInnerHTML={{ __html: page.content }} />
+                            )}
+
+                            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Daftar Dosen</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {lecturers.map((lecturer) => (
+                                    <div
+                                        key={lecturer.id}
+                                        onClick={() => setSelectedLecturer(lecturer)}
+                                        className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-[1.02]"
+                                    >
+                                        {lecturer.photo_path && (
+                                            <div className="w-full h-48 overflow-hidden rounded-t-lg">
+                                                <img
+                                                    src={`/storage/${lecturer.photo_path}`}
+                                                    alt={lecturer.name}
+                                                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                                                />
+                                            </div>
+                                        )}
+                                        <div className="p-6 text-center">
+                                            <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                                {lecturer.name}
+                                            </h3>
+                                            <p className="text-base text-gray-600 mb-3">
+                                                {lecturer.position}
+                                            </p>
+                                            <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
+                                                {truncateWords(lecturer.bio || "", 20)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        <div
+                            className="prose max-w-none prose-lg text-gray-800 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: page.content }}
+                        />
+                    )}
+                </div>
+            </main>
+
+            <Footer news={recentNews} faculties={faculties} />
+            <ScrollToTopButton />
+
             <Transition appear show={!!selectedLecturer} as={Fragment}>
                 <Dialog
                     as="div"
@@ -87,32 +136,31 @@ export default function PublicPage() {
                             >
                                 <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                                     <button
-                                        className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-xl"
-                                        onClick={() =>
-                                            setSelectedLecturer(null)
-                                        }
+                                        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-light" 
+                                        onClick={() => setSelectedLecturer(null)}
                                     >
                                         &times;
                                     </button>
-                                    <div className="flex flex-col items-center space-y-4">
+                                    <div className="flex flex-col items-center space-y-4 pt-4">
                                         {selectedLecturer?.photo_path && (
-                                            <img
-                                                src={`/storage/${selectedLecturer.photo_path}`}
-                                                alt={selectedLecturer.name}
-                                                className="h-40 object-contain"
-                                            />
+                                            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-custom-blue shadow-lg">
+                                                <img
+                                                    src={`/storage/${selectedLecturer.photo_path}`}
+                                                    alt={selectedLecturer.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
                                         )}
-                                        <h2 className="text-2xl font-bold text-center text-gray-800">
+                                        <h2 className="text-2xl font-bold text-center text-gray-800 mt-4">
                                             {selectedLecturer?.name}
                                         </h2>
-                                        <p className="text-sm text-gray-600">
+                                        <p className="text-base text-gray-600 mb-2">
                                             {selectedLecturer?.position}
                                         </p>
                                         <div
-                                            className="prose max-w-none text-sm"
+                                            className="prose max-w-none text-base text-gray-700 leading-relaxed px-4"
                                             dangerouslySetInnerHTML={{
-                                                __html:
-                                                    selectedLecturer?.bio || "",
+                                                __html: selectedLecturer?.bio || "",
                                             }}
                                         />
                                     </div>
