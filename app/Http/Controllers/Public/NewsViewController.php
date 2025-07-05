@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Public;
 
-use App\Http\Controllers\Controller;
 use App\Models\News;
-use Illuminate\Http\Request;
+use App\Models\Page;
 use Inertia\Inertia;
+use App\Models\Faculty;
+use Illuminate\Http\Request;
+use App\Models\NavigationItem;
+use App\Http\Controllers\Controller;
 
 class NewsViewController extends Controller
 {
@@ -15,8 +18,34 @@ class NewsViewController extends Controller
             ->latest()
             ->paginate(6);
 
+        $navigations = NavigationItem::with(['page', 'children.page'])
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
+
+        $pages = Page::select('id', 'title')->get();
+        $faculties = Faculty::orderBy('name')->get();
+        $recentNews = News::where('is_active', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return Inertia::render('Public/News/Index', [
             'news' => $news,
+            'navigations' => $navigations,
+            'pages' => $pages,
+            'faculties' => $faculties->map(fn($faculty) => [
+                'id' => $faculty->id,
+                'name' => $faculty->name,
+            ]),
+            'recentNews' => $recentNews->map(fn($item) => [
+                'id' => $item->id,
+                'title' => $item->title,
+                'content' => $item->content,
+                'date' => $item->created_at->format('F d, Y'),
+                'img' => $item->thumbnail_url,
+                'url' => route('public.news.show', $item->slug),
+            ]),
         ]);
     }
 
@@ -26,8 +55,34 @@ class NewsViewController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
+        $navigations = NavigationItem::with(['page', 'children.page'])
+            ->whereNull('parent_id')
+            ->orderBy('order')
+            ->get();
+
+        $pages = Page::select('id', 'title')->get();
+        $faculties = Faculty::orderBy('name')->get();
+        $recentNews = News::where('is_active', true)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return Inertia::render('Public/News/Show', [
             'news' => $item,
+            'navigations' => $navigations,
+            'pages' => $pages,
+            'faculties' => $faculties->map(fn($faculty) => [
+                'id' => $faculty->id,
+                'name' => $faculty->name,
+            ]),
+            'recentNews' => $recentNews->map(fn($item) => [
+                'id' => $item->id,
+                'title' => $item->title,
+                'content' => $item->content,
+                'date' => $item->created_at->format('F d, Y'),
+                'img' => $item->thumbnail_url,
+                'url' => route('public.news.show', $item->slug),
+            ]),
         ]);
     }
 }

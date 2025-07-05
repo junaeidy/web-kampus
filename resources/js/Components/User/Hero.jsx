@@ -7,7 +7,7 @@ export default function HeroSection({ data }) {
     if (!Array.isArray(data) || data.length === 0) return null;
 
     return (
-        <section className="relative mt-[70px] h-screen w-full">
+        <section className="relative mt-[70px] h-[610px] w-full">
             <Swiper
                 modules={[Autoplay]}
                 autoplay={{
@@ -21,7 +21,7 @@ export default function HeroSection({ data }) {
                 {data.map((slide, index) => (
                     <SwiperSlide key={index}>
                         <div
-                            className="h-screen w-full bg-center bg-cover relative"
+                            className="h-[610px] w-full bg-center bg-cover relative"
                             style={{ backgroundImage: `url('/storage/${slide.image}')` }}
                         >
                             <div className="absolute inset-0 bg-black bg-opacity-50"></div>

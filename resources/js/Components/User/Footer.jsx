@@ -8,7 +8,6 @@ import {
     MapPin,
     Phone,
     Mail,
-    ChevronUp,
 } from "lucide-react";
 
 export default function Footer({ news = [], faculties = [] }) {
