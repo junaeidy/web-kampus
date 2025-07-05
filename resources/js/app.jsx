@@ -7,6 +7,8 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
 import React, { useEffect, useState } from "react";
 import LoadingOverlay from "@/Components/LoadingOverlay";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -21,18 +23,31 @@ createInertiaApp({
         function AppWrapper() {
             const [showLoader, setShowLoader] = useState(true);
 
+            const isAdminPage =
+                props.initialPage.url.startsWith("/admin") ||
+                props.initialPage.url.startsWith("/dashboard");
+
+            useEffect(() => {
+                AOS.init({
+                    duration: 700,
+                    once: true,
+                    easing: "ease-out-cubic",
+                });
+            }, []);
+
             useEffect(() => {
                 const firstLoad = setTimeout(() => {
                     setShowLoader(false);
                 }, 1500);
 
-                const start = () => {
-                    setShowLoader(true);
-                };
+                const start = () => setShowLoader(true);
 
                 const finish = () => {
                     setTimeout(() => {
                         setShowLoader(false);
+                        requestAnimationFrame(() => {
+                            AOS.refreshHard();
+                        });
                     }, 1000);
                 };
 
@@ -51,7 +66,7 @@ createInertiaApp({
             return (
                 <>
                     <Toaster position="top-right" />
-                    {showLoader && <LoadingOverlay />}
+                    {!isAdminPage && showLoader && <LoadingOverlay />}
                     <App {...props} />
                 </>
             );

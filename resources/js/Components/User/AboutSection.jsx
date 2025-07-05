@@ -9,9 +9,13 @@ export default function AboutSection({ data }) {
 
     if (contents.length === 0) return null;
 
-    const renderContent = (content) => (
+    const renderContent = (content, index = 0) => (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="lg:pr-8 max-w-full lg:max-w-xl mx-auto lg:mx-0">
+            <div
+                className="lg:pr-8 max-w-full lg:max-w-xl mx-auto lg:mx-0"
+                data-aos="fade-right"
+                data-aos-delay="100"
+            >
                 <span className="inline-block bg-custom-blue text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
                     Tentang Kami
                 </span>
@@ -23,7 +27,11 @@ export default function AboutSection({ data }) {
                 </p>
             </div>
 
-            <div className="flex justify-center items-center">
+            <div
+                className="flex justify-center items-center"
+                data-aos="fade-left"
+                data-aos-delay="300"
+            >
                 <img
                     src={`/storage/${content.image}`}
                     alt="Gambar Kampus"
@@ -52,7 +60,7 @@ export default function AboutSection({ data }) {
                     >
                         {contents.map((content, index) => (
                             <SwiperSlide key={index}>
-                                {renderContent(content)}
+                                {renderContent(content, index)}
                             </SwiperSlide>
                         ))}
                     </Swiper>

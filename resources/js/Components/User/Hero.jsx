@@ -1,7 +1,7 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
 
 export default function HeroSection({ data }) {
     if (!Array.isArray(data) || data.length === 0) return null;
@@ -22,18 +22,30 @@ export default function HeroSection({ data }) {
                     <SwiperSlide key={index}>
                         <div
                             className="h-[610px] w-full bg-center bg-cover relative"
-                            style={{ backgroundImage: `url('/storage/${slide.image}')` }}
+                            style={{
+                                backgroundImage: `url('/storage/${slide.image}')`,
+                            }}
+                            data-aos="zoom-in"
+                            data-aos-delay="100"
                         >
                             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
                             <div className="relative z-10 h-full flex flex-col justify-center items-start container mx-auto px-4 text-white">
                                 {slide.title && (
-                                    <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-lg">
+                                    <h1
+                                        className="text-4xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-lg"
+                                        data-aos="fade-up"
+                                        data-aos-delay="200"
+                                    >
                                         {slide.title}
                                     </h1>
                                 )}
                                 {slide.description && (
-                                    <p className="text-lg md:text-xl max-w-2xl mb-6 drop-shadow">
+                                    <p
+                                        className="text-lg md:text-xl max-w-2xl mb-6 drop-shadow"
+                                        data-aos="fade-up"
+                                        data-aos-delay="400"
+                                    >
                                         {slide.description}
                                     </p>
                                 )}
@@ -41,6 +53,8 @@ export default function HeroSection({ data }) {
                                     <a
                                         href={slide.cta_link}
                                         className="inline-block bg-custom-blue hover:bg-blue-700 transition text-white font-semibold py-3 px-6 rounded-lg shadow-lg"
+                                        data-aos="fade-up"
+                                        data-aos-delay="600"
                                     >
                                         Pelajari Lebih Lanjut
                                     </a>

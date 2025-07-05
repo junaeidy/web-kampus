@@ -21,10 +21,27 @@ export default function Home({ navigations, news, faculties, sections }) {
             <Navbar navigations={navigations} />
 
             {heroSection && <HeroSection data={heroSection.contents} />}
-            <FeatureCards />
-            {aboutSection && <AboutSection data={aboutSection} />}
-            {cta && <CallToActionSection data={cta} />}
-            <LatestNewsSection news={news} />
+
+            <div data-aos="fade-up">
+                <FeatureCards />
+            </div>
+
+            {aboutSection && (
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <AboutSection data={aboutSection} />
+                </div>
+            )}
+
+            {cta && (
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <CallToActionSection data={cta} />
+                </div>
+            )}
+
+            <div data-aos="fade-up" data-aos-delay="300">
+                <LatestNewsSection news={news} />
+            </div>
+
             <Footer news={news} faculties={faculties} />
             <ScrollToTopButton />
         </div>

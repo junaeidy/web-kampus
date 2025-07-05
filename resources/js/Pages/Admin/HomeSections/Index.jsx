@@ -62,14 +62,14 @@ export default function Index({ sections = [] }) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100">
-                                {sections.sort((a, b) => a.order - b.order).map((section) => ( // Sort by order
+                                {sections.sort((a, b) => a.order - b.order).map((section) => (
                                     <tr key={section.id}>
-                                        <td className="px-4 py-2 capitalize">{section.section_type.replace(/_/g, ' ')}</td> {/* Use section_type */}
+                                        <td className="px-4 py-2 capitalize">{section.section_type.replace(/_/g, ' ')}</td>
                                         <td className="px-4 py-2">{section.order}</td>
                                         <td className="px-4 py-2">{section.multiple_content ? 'Ya' : 'Tidak'}</td>
                                         <td className="px-4 py-2 flex gap-2 items-center">
                                             <Link
-                                                href={route("admin.home.sections.edit", section.id)} // Correct route name
+                                                href={route("admin.home.sections.edit", section.id)}
                                                 className="text-blue-600 hover:text-blue-800 relative group"
                                             >
                                                 <PencilSquareIcon className="w-5 h-5" />
