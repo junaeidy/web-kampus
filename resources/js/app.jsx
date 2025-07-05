@@ -22,10 +22,12 @@ createInertiaApp({
     setup({ el, App, props }) {
         function AppWrapper() {
             const [showLoader, setShowLoader] = useState(true);
+            const currentUrl = props.page?.url || props.initialPage?.url || "";
 
-            const isAdminPage =
-                props.initialPage.url.startsWith("/admin") ||
-                props.initialPage.url.startsWith("/dashboard");
+            const excludedPages = ["/admin", "/dashboard", "/login"];
+            const isExcluded = excludedPages.some((prefix) =>
+                currentUrl.startsWith(prefix)
+            );
 
             useEffect(() => {
                 AOS.init({
@@ -66,7 +68,7 @@ createInertiaApp({
             return (
                 <>
                     <Toaster position="top-right" />
-                    {!isAdminPage && showLoader && <LoadingOverlay />}
+                    {!isExcluded && showLoader && <LoadingOverlay />}
                     <App {...props} />
                 </>
             );

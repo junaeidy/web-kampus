@@ -17,7 +17,24 @@ export default function Home({ navigations, news, faculties, sections }) {
 
     return (
         <div>
-            <Head title="Selamat datang di Website Kampus" />
+            <Head>
+                <title>Selamat datang di Website Kampus</title>
+                <meta name="description" content="Website resmi Kampus STAI Al-Hikmah Pariangan. Dapatkan informasi terbaru mengenai fakultas, berita, fasilitas, dan kegiatan kampus kami." />
+                
+                {/* Open Graph Tags */}
+                <meta property="og:title" content="Selamat datang di Website Kampus STAI Al-Hikmah Pariangan" />
+                <meta property="og:description" content="Dapatkan informasi terbaru mengenai fakultas, berita, fasilitas, dan kegiatan kampus kami." />
+                <meta property="og:image" content="/images/logo.png" />
+                <meta property="og:url" content="https://staialhikmahpariangan.ac.id/" />
+                <meta property="og:type" content="website" />
+                
+                {/* Twitter Card */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Selamat datang di Website Kampus STAI Al-Hikmah Pariangan" />
+                <meta name="twitter:description" content="Dapatkan informasi terbaru mengenai fakultas, berita, fasilitas, dan kegiatan kampus kami." />
+                <meta name="twitter:image" content="/images/logo.png" />
+            </Head>
+
             <Navbar navigations={navigations} />
 
             {heroSection && <HeroSection data={heroSection.contents} />}
