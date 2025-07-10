@@ -10,9 +10,24 @@ use App\Models\Faculty;
 
 class HomeController extends Controller
 {
+    private function formatNavigation($nav)
+    {
+        return [
+            'id' => $nav->id,
+            'label' => $nav->label,
+            'url' => $nav->url,
+            'page' => $nav->page ? [
+                'slug' => $nav->page->slug,
+            ] : null,
+            'children' => $nav->children
+                ? $nav->children->map(fn($child) => $this->formatNavigation($child))
+                : [],
+        ];
+    }
+
     public function index()
     {
-        $navigations = NavigationItem::with(['page', 'children.page'])
+        $navigations = NavigationItem::withRecursiveChildren()
             ->whereNull('parent_id')
             ->orderBy('order')
             ->get();
@@ -21,31 +36,15 @@ class HomeController extends Controller
             ->orderBy('order')
             ->get();
 
-        $news = News::latest()->take(3)->get(); 
+        $news = News::latest()->take(3)->get();
+
         $faculties = Faculty::orderBy('name')->get();
 
-        return inertia('Welcome', [ 
-            'navigations' => $navigations->map(function ($nav) {
-                return [
-                    'id' => $nav->id,
-                    'label' => $nav->label,
-                    'url' => $nav->url,
-                    'page' => $nav->page ? [
-                        'slug' => $nav->page->slug,
-                    ] : null,
-                    'children' => $nav->children->map(function ($child) {
-                        return [
-                            'id' => $child->id,
-                            'label' => $child->label,
-                            'url' => $child->url,
-                            'page' => $child->page ? [
-                                'slug' => $child->page->slug,
-                            ] : null,
-                        ];
-                    }),
-                ];
-            }),
+        return inertia('Welcome', [
+            'navigations' => $navigations->map(fn($nav) => $this->formatNavigation($nav)),
+
             'sections' => $sections,
+
             'news' => $news->map(fn($item) => [
                 'id' => $item->id,
                 'title' => $item->title,
@@ -54,6 +53,7 @@ class HomeController extends Controller
                 'img' => $item->thumbnail_url,
                 'url' => route('public.news.show', $item->slug),
             ]),
+
             'faculties' => $faculties->map(fn($faculty) => [
                 'id' => $faculty->id,
                 'name' => $faculty->name,

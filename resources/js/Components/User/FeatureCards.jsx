@@ -33,36 +33,36 @@ export default function FeatureCards() {
     ];
 
     return (
-        <section className="bg-section-bg py-16 px-4">
+        <section className="bg-section-bg py-12 sm:py-16 px-4">
             <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                     {features.map((feature, index) => (
                         <div
                             key={feature.id}
                             data-aos="fade-up"
                             data-aos-delay={index * 200}
-                            className="group relative p-8 rounded-lg shadow-lg flex flex-col items-center text-center bg-white overflow-hidden
+                            className="group relative p-6 sm:p-8 rounded-lg shadow-lg flex flex-col items-center text-center bg-white overflow-hidden
                                        transition-all duration-300 ease-in-out hover:shadow-xl"
                         >
                             <span className="absolute bottom-0 left-0 h-1 bg-custom-blue w-0 group-hover:w-full transition-all duration-500 ease-out"></span>
 
                             <div className="relative z-10">
-                                <div className="mb-6">
-                                    <feature.icon className="w-16 h-16 text-gray-600 transition duration-300" />
+                                <div className="mb-4 sm:mb-6">
+                                    <feature.icon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-600 transition duration-300" />
                                 </div>
 
-                                <h3 className="text-2xl font-bold mb-4 text-gray-800 transition duration-300 cursor-pointer hover:text-custom-blue">
+                                <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-800 transition duration-300 cursor-pointer hover:text-custom-blue">
                                     {feature.title}
                                 </h3>
 
-                                <p className="text-gray-600 mb-8 transition duration-300">
+                                <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 transition duration-300">
                                     {feature.description}
                                 </p>
 
                                 <a
                                     target="_blank"
                                     href={feature.link}
-                                    className="group/button relative inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold transition-all duration-300
+                                    className="group/button relative inline-flex items-center justify-center px-5 py-2.5 sm:px-6 sm:py-3 rounded-full font-semibold transition-all duration-300
                                                border border-gray-300 text-gray-700 bg-white overflow-hidden"
                                 >
                                     <span className="absolute inset-0 bg-custom-blue -translate-x-full group-hover/button:translate-x-0 transition-transform duration-500 ease-in-out"></span>

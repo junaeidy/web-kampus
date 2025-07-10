@@ -139,23 +139,29 @@ export default function NavigationIndex() {
     };
 
 
-    const renderChildren = (children) => (
-        <SortableContext
-            items={children.map((child) => child.id)}
-            strategy={verticalListSortingStrategy}
-        >
-            <ul className="pl-6 mt-2 space-y-1 border-l">
-                {children.map((child) => (
-                    <SortableNavigationItem
-                        key={child.id}
-                        nav={child}
-                        onEdit={() => openModal(child)}
-                        onDelete={() => setDeleteId(child.id)}
-                    />
-                ))}
-            </ul>
-        </SortableContext>
-    );
+    const renderChildren = (children) => {
+        if (!children || children.length === 0) return null;
+
+        return (
+            <SortableContext
+                items={children.map((child) => child.id)}
+                strategy={verticalListSortingStrategy}
+            >
+                <ul className="pl-6 mt-2 space-y-1 border-l border-gray-300">
+                    {children.map((child) => (
+                        <SortableNavigationItem
+                            key={child.id}
+                            nav={child}
+                            onEdit={() => openModal(child)}
+                            onDelete={() => setDeleteId(child.id)}
+                        >
+                            {renderChildren(child.children)}
+                        </SortableNavigationItem>
+                    ))}
+                </ul>
+            </SortableContext>
+        );
+    };
 
     return (
         <AuthenticatedLayout header="Manajemen Navigasi">

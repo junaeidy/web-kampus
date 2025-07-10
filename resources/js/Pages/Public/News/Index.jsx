@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Head, usePage, router } from "@inertiajs/react";
 import Navbar from "@/Components/User/Navbar";
 import Footer from "@/Components/User/Footer";
 import HeroSectionWithContent from "@/Components/User/HeroSectionWithContent";
 import ScrollToTopButton from "@/Components/ScrollToTopButton";
 import { CalendarDays, Search } from "lucide-react";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export default function NewsIndex({
     pages,
@@ -15,6 +17,17 @@ export default function NewsIndex({
 }) {
     const { news } = usePage().props;
     const [searchQuery, setSearchQuery] = useState(search || "");
+
+    useEffect(() => {
+        AOS.init({
+            once: true,
+            offset: 50, 
+            disable: function() {
+                return window.innerWidth <= 768;
+            },
+        });
+        AOS.refresh();
+    }, [news.data]);
 
     const handleSearch = (e) => {
         e.preventDefault();
@@ -61,44 +74,44 @@ export default function NewsIndex({
         recentNews && recentNews.length > 0 ? recentNews : defaultRecentNews;
 
     return (
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col overflow-x-hidden">
             <Head title="Berita" />
             <Navbar navigations={navigations} pages={pages} />
             <HeroSectionWithContent />
 
-            <main className="flex-grow bg-section-bg py-16 px-4">
-                <div className="container mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <main className="flex-grow bg-section-bg py-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+                <div className="container mx-auto overflow-x-hidden grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12"> 
                     <div className="lg:col-span-2">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                             {news.data.length > 0 ? (
                                 news.data.map((item, index) => (
                                     <div
                                         key={item.id}
                                         data-aos="fade-up"
-                                        data-aos-delay={index * 200}
+                                        data-aos-delay={window.innerWidth <= 768 ? 0 : index * 200}
                                         className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl"
                                     >
                                         {item.thumbnail_path && (
-                                            <div className="w-full h-48 overflow-hidden">
+                                            <div className="w-full h-40 sm:h-48 overflow-hidden">
                                                 <img
                                                     src={`/storage/${item.thumbnail_path}`}
                                                     alt={item.title}
-                                                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                                                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                                 />
                                             </div>
                                         )}
 
-                                        <div className="p-6">
-                                            <div className="flex items-center text-gray-500 text-sm mb-4">
+                                        <div className="p-4 sm:p-6">
+                                            <div className="flex items-center text-gray-500 text-xs sm:text-sm mb-3 sm:mb-4"> 
                                                 <span className="flex items-center">
-                                                    <CalendarDays className="w-4 h-4 mr-1 text-custom-blue" />
+                                                    <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4 mr-1 text-custom-blue" /> 
                                                     {formatDate(
                                                         item.created_at
                                                     )}
                                                 </span>
                                             </div>
 
-                                            <h3 className="text-xl font-bold text-gray-800 mb-3 leading-tight">
+                                            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 sm:mb-3 leading-tight">
                                                 <Link
                                                     href={route(
                                                         "public.news.show",
@@ -111,7 +124,7 @@ export default function NewsIndex({
                                             </h3>
 
                                             <p
-                                                className="text-gray-600 text-base mb-6 line-clamp-3"
+                                                className="text-gray-600 text-sm sm:text-base mb-4 sm:mb-6 line-clamp-3" 
                                                 dangerouslySetInnerHTML={{
                                                     __html: item.content,
                                                 }}
@@ -122,11 +135,11 @@ export default function NewsIndex({
                                                     "public.news.show",
                                                     item.slug
                                                 )}
-                                                className="inline-flex items-center text-custom-blue font-semibold hover:underline transition-colors duration-200"
+                                                className="inline-flex items-center text-custom-blue font-semibold text-sm sm:text-base hover:underline transition-colors duration-200"
                                             >
                                                 Baca Selengkapnya
                                                 <svg
-                                                    className="ml-2 w-4 h-4"
+                                                    className="ml-2 w-3 h-3 sm:w-4 sm:h-4"
                                                     fill="none"
                                                     stroke="currentColor"
                                                     viewBox="0 0 24 24"
@@ -149,22 +162,21 @@ export default function NewsIndex({
                             )}
                         </div>
 
-                        {/* Pagination */}
-                        <div className="mt-12 flex justify-center gap-2 text-sm text-gray-600">
+                        <div className="mt-8 sm:mt-12 flex justify-center flex-wrap gap-2 text-sm text-gray-600">
                             {news.links.map((link, i) => (
                                 <Link
                                     key={i}
                                     href={link.url || ""}
-                                    className={`px-4 py-2 rounded-lg font-semibold transition duration-200
+                                    className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-semibold transition duration-200 text-xs sm:text-sm
                                         ${
                                             link.active
                                                 ? "bg-custom-blue text-white"
                                                 : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-300"
                                         } ${
-                                        link.url
-                                            ? ""
-                                            : "cursor-not-allowed opacity-50"
-                                    }`}
+                                            link.url
+                                                ? ""
+                                                : "cursor-not-allowed opacity-50"
+                                        }`}
                                     dangerouslySetInnerHTML={{
                                         __html: link.label,
                                     }}
@@ -173,15 +185,13 @@ export default function NewsIndex({
                         </div>
                     </div>
 
-                    {/* Kolom Kanan: Sidebar */}
-                    <div className="lg:col-span-1 space-y-8">
-                        {/* Widget Search */}
+                    <div className="lg:col-span-1 space-y-6 sm:space-y-8 mt-8 lg:mt-0"> 
                         <div
-                            className="bg-white p-6 rounded-lg shadow-md"
+                            className="bg-white p-4 sm:p-6 rounded-lg shadow-md"
                             data-aos="fade-left"
                             data-aos-delay="100"
                         >
-                            <h4 className="text-lg font-bold text-gray-800 mb-4">
+                            <h4 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">
                                 Cari Berita Di Sini
                             </h4>
                             <form onSubmit={handleSearch}>
@@ -193,34 +203,34 @@ export default function NewsIndex({
                                             setSearchQuery(e.target.value)
                                         }
                                         placeholder="Cari..."
-                                        className="w-full pl-4 pr-10 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent"
+                                        className="w-full pl-4 pr-10 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent text-sm sm:text-base"
                                     />
                                     <button
                                         type="submit"
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-custom-blue"
                                     >
-                                        <Search className="w-5 h-5" />
+                                        <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </button>
                                 </div>
                             </form>
                         </div>
 
                         <div
-                            className="bg-white p-6 rounded-lg shadow-md"
+                            className="bg-white p-4 sm:p-6 rounded-lg shadow-md" 
                             data-aos="fade-left"
                             data-aos-delay="300"
                         >
-                            <h4 className="text-lg font-bold text-gray-800 mb-4">
+                            <h4 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4">
                                 Berita Terbaru
                             </h4>
-                            <div className="space-y-4">
+                            <div className="space-y-3 sm:space-y-4">
                                 {displayRecentNews.map((item) => (
                                     <Link
                                         key={item.id}
                                         href={item.url || "#"}
                                         className="flex items-center group"
                                     >
-                                        <div className="w-20 h-20 flex-shrink-0 mr-4 overflow-hidden rounded-lg">
+                                        <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 mr-3 sm:mr-4 overflow-hidden rounded-lg">
                                             <img
                                                 src={
                                                     item.img ||
@@ -231,11 +241,11 @@ export default function NewsIndex({
                                             />
                                         </div>
                                         <div>
-                                            <h5 className="text-base font-semibold text-gray-800 group-hover:text-custom-blue transition-colors duration-200">
+                                            <h5 className="text-sm sm:text-base font-semibold text-gray-800 group-hover:text-custom-blue transition-colors duration-200 leading-tight">
                                                 {item.title}
                                             </h5>
-                                            <p className="text-gray-500 text-sm flex items-center mt-1">
-                                                <CalendarDays className="w-4 h-4 mr-1" />{" "}
+                                            <p className="text-gray-500 text-xs sm:text-sm flex items-center mt-0.5 sm:mt-1">
+                                                <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />{" "}
                                                 {formatDate(item.date)}
                                             </p>
                                         </div>

@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { useForm } from '@inertiajs/react';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 
 export default function NavigationFormModal({ isOpen, onClose, navigation, pages, navigations }) {
     const { data, setData, post, put, processing, reset, errors } = useForm({
@@ -55,14 +54,33 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
         });
     };
 
+    // 🔁 Fungsi rekursif untuk opsi parent
+    const buildParentOptions = (items, level = 0, excludeId = null) => {
+        let result = [];
+
+        for (const item of items) {
+            if (excludeId && item.id === excludeId) continue;
+
+            result.push({
+                id: item.id,
+                label: `${'—'.repeat(level)} ${item.label}`,
+            });
+
+            if (item.children && item.children.length > 0) {
+                const childrenOptions = buildParentOptions(item.children, level + 1, excludeId);
+                result = result.concat(childrenOptions);
+            }
+        }
+
+        return result;
+    };
+
     return (
         <Transition appear show={isOpen} as={Fragment}>
             <Dialog
                 as="div"
                 className="relative z-50"
-                onClose={() => {
-                    onClose();
-                }}
+                onClose={onClose}
             >
                 <Transition.Child
                     as={Fragment}
@@ -93,6 +111,7 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
                                 </Dialog.Title>
 
                                 <form onSubmit={handleSubmit} className="space-y-4">
+                                    {/* Label */}
                                     <div>
                                         <label className="block text-sm font-medium">Label</label>
                                         <input
@@ -104,6 +123,7 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
                                         {errors.label && <p className="text-sm text-red-500 mt-1">{errors.label}</p>}
                                     </div>
 
+                                    {/* Page (optional) */}
                                     <div>
                                         <label className="block text-sm font-medium">Halaman (Opsional)</label>
                                         <select
@@ -121,6 +141,7 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
                                         {errors.page_id && <p className="text-sm text-red-500 mt-1">{errors.page_id}</p>}
                                     </div>
 
+                                    {/* URL (optional) */}
                                     <div>
                                         <label className="block text-sm font-medium">URL (Opsional)</label>
                                         <input
@@ -132,6 +153,7 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
                                         {errors.url && <p className="text-sm text-red-500 mt-1">{errors.url}</p>}
                                     </div>
 
+                                    {/* Parent */}
                                     <div>
                                         <label className="block text-sm font-medium">Parent Menu (Opsional)</label>
                                         <select
@@ -140,22 +162,20 @@ export default function NavigationFormModal({ isOpen, onClose, navigation, pages
                                             className="w-full border-gray-300 rounded-md shadow-sm"
                                         >
                                             <option value="">-- Tidak Ada --</option>
-                                            {navigations
-                                                .filter((n) => !navigation || n.id !== navigation.id)
-                                                .map((nav) => (
-                                                    <option key={nav.id} value={String(nav.id)}>
-                                                        {nav.label}
-                                                    </option>
-                                                ))}
+                                            {buildParentOptions(navigations, 0, navigation?.id).map((option) => (
+                                                <option key={option.id} value={option.id}>
+                                                    {option.label}
+                                                </option>
+                                            ))}
                                         </select>
+                                        {errors.parent_id && <p className="text-sm text-red-500 mt-1">{errors.parent_id}</p>}
                                     </div>
 
+                                    {/* Buttons */}
                                     <div className="flex justify-end gap-2">
                                         <button
                                             type="button"
-                                            onClick={() => {
-                                                onClose();
-                                            }}
+                                            onClick={onClose}
                                             className="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200"
                                         >
                                             Batal

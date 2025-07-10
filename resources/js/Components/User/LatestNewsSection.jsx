@@ -46,41 +46,41 @@ export default function LatestNewsSection({ news }) {
     const newsData = news && news.length > 0 ? news : defaultNews;
 
     return (
-        <section className="bg-section-bg py-16 px-4">
+        <section className="bg-section-bg py-12 sm:py-16 px-4">
             <div className="container mx-auto">
-                <div className="text-center mb-10 max-w-2xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-3">
+                <div className="text-center mb-8 sm:mb-10 max-w-2xl mx-auto">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight mb-2 sm:mb-3">
                         Berita Terbaru
                     </h2>
-                    <div className="h-1 w-20 bg-custom-blue mx-auto mb-4"></div>
-                    <p className="text-gray-600 text-base md:text-lg">
+                    <div className="h-1 w-16 sm:w-20 bg-custom-blue mx-auto mb-3 sm:mb-4"></div>
+                    <p className="text-sm sm:text-base md:text-lg">
                         Berbagai variasi berita dan artikel tersedia untuk Anda.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                     {newsData.map((item, index) => (
                         <div
                             key={item.id}
                             data-aos="fade-up"
-                            data-aos-delay={index * 200}
+                            data-aos-delay={index * 150}
                             className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl"
                         >
-                            <div className="w-full h-40 overflow-hidden">
+                            <div className="w-full relative pt-[56.25%] overflow-hidden">
                                 <img
                                     src={item.img || "/images/news-default.jpg"}
                                     alt={item.title}
-                                    className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                                    className="absolute inset-0 w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
                                 />
                             </div>
 
-                            <div className="p-4">
-                                <div className="flex items-center text-gray-500 text-sm mb-2">
-                                    <CalendarDays className="w-4 h-4 mr-1 text-custom-blue" />
+                            <div className="p-3 sm:p-4">
+                                <div className="flex items-center text-gray-500 text-xs sm:text-sm mb-1.5 sm:mb-2"> 
+                                    <CalendarDays className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 text-custom-blue" />
                                     {item.date}
                                 </div>
 
-                                <h3 className="text-lg font-semibold text-gray-800 mb-2 leading-snug">
+                                <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1.5 sm:mb-2 leading-snug">
                                     <Link
                                         href={item.url || "#"}
                                         className="hover:text-custom-blue transition-colors duration-200"
@@ -89,17 +89,17 @@ export default function LatestNewsSection({ news }) {
                                     </Link>
                                 </h3>
 
-                                <p className="text-gray-600 text-sm mb-4">
-                                    {stripHtmlAndLimit(item.content, 30)}
+                                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
+                                    {stripHtmlAndLimit(item.content || item.description, 20)}
                                 </p>
 
                                 <Link
                                     href={item.url || "#"}
-                                    className="inline-flex items-center text-custom-blue font-semibold hover:underline text-sm"
+                                    className="inline-flex items-center text-custom-blue font-semibold hover:underline text-xs sm:text-sm"
                                 >
                                     Baca Selengkapnya
                                     <svg
-                                        className="ml-1 w-4 h-4"
+                                        className="ml-1 w-3.5 h-3.5 sm:w-4 sm:h-4"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -117,11 +117,10 @@ export default function LatestNewsSection({ news }) {
                     ))}
                 </div>
 
-                {/* Tombol "Lihat Semua Berita" */}
-                <div className="mt-10 text-center">
+                <div className="mt-8 sm:mt-10 text-center"> 
                     <Link
                         href={route("public.news.index")}
-                        className="inline-block bg-custom-blue text-white font-semibold px-8 py-4 rounded-full hover:bg-blue-700 transition-all duration-300"
+                        className="inline-block bg-custom-blue text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-full hover:bg-blue-700 transition-all duration-300 text-sm sm:text-base" // Sesuaikan padding & font size tombol
                     >
                         Lihat Semua Berita
                     </Link>

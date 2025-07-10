@@ -10,19 +10,19 @@ export default function AboutSection({ data }) {
     if (contents.length === 0) return null;
 
     const renderContent = (content, index = 0) => (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center w-full max-w-full overflow-hidden">
             <div
-                className="lg:pr-8 max-w-full lg:max-w-xl mx-auto lg:mx-0"
+                className="max-w-full md:max-w-xl mx-auto md:mx-0 text-center md:text-left"
                 data-aos="fade-right"
                 data-aos-delay="100"
             >
-                <span className="inline-block bg-custom-blue text-white text-xs font-semibold px-3 py-1 rounded-full mb-4">
+                <span className="inline-block bg-custom-blue text-white text-xs font-semibold px-3 py-1 rounded-full mb-3 md:mb-4">
                     Tentang Kami
                 </span>
-                <h2 className="text-4xl font-bold text-gray-800 leading-tight mb-6">
+                <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 leading-tight mb-4 md:mb-6">
                     {content.headline || "Judul default"}
                 </h2>
-                <p className="text-gray-600 leading-relaxed mb-8">
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6 md:mb-8">
                     {content.description || "Deskripsi tidak tersedia."}
                 </p>
             </div>
@@ -35,14 +35,14 @@ export default function AboutSection({ data }) {
                 <img
                     src={`/storage/${content.image}`}
                     alt="Gambar Kampus"
-                    className="w-full h-auto object-cover rounded-lg shadow-md max-h-[450px]"
+                    className="w-full h-auto object-cover rounded-lg shadow-md max-w-sm sm:max-w-md md:max-w-full mx-auto"
                 />
             </div>
         </div>
     );
 
     return (
-        <section className="bg-white py-16 px-4">
+        <section className="bg-white py-12 sm:py-16 px-4 overflow-x-hidden">
             <div className="max-w-6xl mx-auto">
                 {contents.length === 1 ? (
                     renderContent(contents[0])
@@ -55,12 +55,18 @@ export default function AboutSection({ data }) {
                         }}
                         loop={true}
                         speed={1000}
-                        pagination={{ clickable: true }}
+                        pagination={{
+                            clickable: true,
+                            dynamicBullets: true,
+                        }}
                         slidesPerView={1}
+                        className="pb-10" 
                     >
                         {contents.map((content, index) => (
                             <SwiperSlide key={index}>
-                                {renderContent(content, index)}
+                                <div className="py-4 md:py-0">
+                                    {renderContent(content, index)}
+                                </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>

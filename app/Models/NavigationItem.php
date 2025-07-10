@@ -26,4 +26,16 @@ class NavigationItem extends Model
     {
         return $this->belongsTo(Page::class);
     }
+
+    public function scopeWithRecursiveChildren($query, $depth = 10)
+    {
+        $with = [];
+        $relation = 'children';
+        for ($i = 0; $i < $depth; $i++) {
+            $with[] = $relation . ($i ? str_repeat('.children', $i) . '.page' : '.page');
+        }
+
+        return $query->with($with);
+    }
+
 }

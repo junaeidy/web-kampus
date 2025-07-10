@@ -11,7 +11,7 @@ class NavigationItemController extends Controller
 {
     public function index()
     {
-        $navigations = NavigationItem::with(['page', 'children.page'])
+        $navigations = NavigationItem::withRecursiveChildren()
             ->whereNull('parent_id')
             ->orderBy('order')
             ->get();
