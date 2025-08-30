@@ -1,14 +1,7 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import {
-    Facebook,
-    Instagram,
-    Link2,
-    MapPin,
-    Phone,
-    Mail,
-} from "lucide-react";
+import { Facebook, Instagram, Link2, MapPin, Phone, Mail } from "lucide-react";
 
 export default function Footer({ news = [], faculties = [] }) {
     const defaultNews = [
@@ -35,115 +28,82 @@ export default function Footer({ news = [], faculties = [] }) {
     ];
 
     const currentNews = news.length > 0 ? news : defaultNews;
-    const currentFaculties =
-        faculties.length > 0 ? faculties : defaultFaculties;
+    const currentFaculties = faculties.length > 0 ? faculties : defaultFaculties;
 
     return (
-        <footer className="bg-footer-bg pt-12 sm:pt-16">
-            <div className="container mx-auto px-4 pb-8 sm:pb-12">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 md:gap-8">
+        <footer className="bg-gradient-to-b from-white to-gray-100 pt-16">
+            <div className="container mx-auto px-6 pb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                    
+                    {/* Logo & Info */}
                     <div>
-                        <div className="flex items-center mb-4">
-                            <ApplicationLogo className="h-8 w-8 sm:h-10 sm:w-10 text-custom-blue" />
-                            <span className="ml-2 text-xl sm:text-2xl font-bold text-gray-800">
+                        <div className="flex items-center mb-5">
+                            <ApplicationLogo className="h-10 w-10 text-custom-blue" />
+                            <span className="ml-3 text-2xl font-bold text-gray-800">
                                 STAI Al-Hikmah Pariangan
                             </span>
                         </div>
-                        <p className="text-gray-600 mb-3 text-sm sm:text-base">
-                            Sekolah Tinggi Agama Islam Al-Hikmah Pariangan
-                            Batusangkar adalah lembaga pendidikan tinggi Islam
-                            yang berkomitmen mencetak generasi unggul.
+                        <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+                            Sekolah Tinggi Agama Islam Al-Hikmah Pariangan Batusangkar adalah lembaga pendidikan tinggi Islam yang berkomitmen mencetak generasi unggul.
                         </p>
-                        <p className="text-gray-600 mb-2 text-sm sm:text-base flex items-start">
-                            <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2 flex-shrink-0 mt-0.5" />
-                            <span>
-                                Jorong Padang Panjang Pariangan No. 17 Kec.
-                                Pariangan Kab. Tanah Datar, West Sumatra,
-                                Indonesia.
-                            </span>
-                        </p>
-                        <p className="text-gray-600 mb-2 text-sm sm:text-base flex items-center">
-                            <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
-                            085379388533
-                        </p>
-                        <p className="text-gray-600 mb-4 text-sm sm:text-base flex items-center">
-                            <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-2" />
-                            info@staialhikmahpariangan.ac.id
-                        </p>
+                        <ul className="space-y-2 text-sm text-gray-600">
+                            <li className="flex items-start">
+                                <MapPin className="w-4 h-4 mr-2 mt-0.5 text-custom-blue" />
+                                Jorong Padang Panjang Pariangan No. 17, Tanah Datar, Sumbar.
+                            </li>
+                            <li className="flex items-center">
+                                <Phone className="w-4 h-4 mr-2 text-custom-blue" /> 085379388533
+                            </li>
+                            <li className="flex items-center">
+                                <Mail className="w-4 h-4 mr-2 text-custom-blue" /> info@staialhikmahpariangan.ac.id
+                            </li>
+                        </ul>
 
-                        <div className="flex space-x-3">
-                            <a
-                                href="https://www.facebook.com/staialhikmahpariangan.ac.id/?locale=id_ID"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-gray-200 hover:bg-custom-blue hover:text-white transition duration-300"
-                            >
-                                <Facebook className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-white" />
-                            </a>
-                            <a
-                                href="https://www.instagram.com/staialhikmahpariangan/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-gray-200 hover:bg-custom-blue hover:text-white transition duration-300"
-                            >
-                                <Instagram className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-white" />
-                            </a>
-                            <a
-                                href="https://linktr.ee/staialhikmahpariangan"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full bg-gray-200 hover:bg-custom-blue hover:text-white transition duration-300"
-                            >
-                                <Link2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 group-hover:text-white" />
-                            </a>
+                        <div className="flex mt-5 space-x-3">
+                            {[ 
+                                { Icon: Facebook, href: "https://www.facebook.com/staialhikmahpariangan.ac.id/?locale=id_ID" },
+                                { Icon: Instagram, href: "https://www.instagram.com/staialhikmahpariangan/" },
+                                { Icon: Link2, href: "https://linktr.ee/staialhikmahpariangan" }
+                            ].map(({ Icon, href }, i) => (
+                                <a key={i} href={href} target="_blank" rel="noopener noreferrer"
+                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-200 hover:bg-custom-blue hover:text-white transition">
+                                    <Icon className="w-5 h-5" />
+                                </a>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="mt-8 sm:mt-0">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
-                            Latest News
-                        </h3>
-                        <div className="space-y-4 sm:space-y-6">
+                    {/* News */}
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-5">Latest News</h3>
+                        <div className="space-y-5">
                             {currentNews.map((item) => (
-                                <Link
-                                    key={item.id}
-                                    href={item.url || "#"}
-                                    className="flex items-center group"
-                                >
-                                    <div className="w-14 h-14 sm:w-16 sm:h-16 mr-3 sm:mr-4 flex-shrink-0">
-                                        <img
-                                            src={
-                                                item.img ||
-                                                "/images/news-default.jpg"
-                                            }
-                                            alt={item.title}
-                                            className="w-full h-full object-cover rounded-lg"
-                                        />
-                                    </div>
+                                <Link key={item.id} href={item.url || "#"} className="flex items-center group">
+                                    <img
+                                        src={item.img || "/images/news-default.jpg"}
+                                        alt={item.title}
+                                        className="w-16 h-16 object-cover rounded-lg mr-4 shadow"
+                                    />
                                     <div>
-                                        <p className="text-gray-700 group-hover:text-custom-blue transition duration-300 font-semibold text-xs sm:text-sm">
+                                        <p className="text-gray-700 group-hover:text-custom-blue transition font-medium text-sm">
                                             {item.title}
                                         </p>
-                                        <span className="text-gray-500 text-xs flex items-center">
-                                            <i className="far fa-calendar-alt mr-1"></i>{" "}
-                                            {item.date}
-                                        </span>
+                                        <span className="text-gray-500 text-xs">{item.date}</span>
                                     </div>
                                 </Link>
                             ))}
                         </div>
                     </div>
 
-                    <div className="mt-8 lg:mt-0">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
-                            Fakultas
-                        </h3>
-                        <ul className="space-y-2 sm:space-y-3">
+                    {/* Faculties */}
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-5">Fakultas</h3>
+                        <ul className="space-y-2">
                             {currentFaculties.map((faculty) => (
                                 <li key={faculty.id}>
                                     <Link
                                         href={faculty.url || "#"}
-                                        className="text-gray-600 hover:text-custom-blue transition duration-300 text-sm sm:text-base"
+                                        className="text-gray-600 hover:text-custom-blue transition text-sm"
                                     >
                                         {faculty.name}
                                     </Link>
@@ -152,43 +112,32 @@ export default function Footer({ news = [], faculties = [] }) {
                         </ul>
                     </div>
 
-                    <div className="mt-8 lg:mt-0">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
-                            Newsletter
-                        </h3>
-                        <p className="text-gray-600 mb-3 text-sm sm:text-base">
-                            Berlangganan untuk mendapatkan berita dan informasi
-                            terbaru dari kami.
+                    {/* Newsletter */}
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-5">Newsletter</h3>
+                        <p className="text-gray-600 text-sm mb-4">
+                            Berlangganan untuk mendapatkan berita dan informasi terbaru dari kami.
                         </p>
-                        <form
-                            onSubmit={(e) => e.preventDefault()}
-                            className="space-y-3 sm:space-y-4"
-                        >
+                        <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
                             <input
                                 type="email"
                                 placeholder="Your email address"
-                                className="w-full p-2.5 sm:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue text-sm sm:text-base"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue text-sm"
                             />
                             <button
                                 type="submit"
-                                className="relative w-full bg-gray-800 text-white py-2.5 sm:py-3 px-5 rounded-lg font-semibold overflow-hidden group transition-all duration-300 text-sm sm:text-base"
+                                className="w-full bg-custom-blue text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
                             >
-                                <span className="absolute inset-0 w-0 bg-custom-blue transition-all duration-300 group-hover:w-full z-0"></span>
-
-                                <span className="relative z-10 flex justify-center items-center">
-                                    Subscribe Now!
-                                </span>
+                                Subscribe
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
 
-            {/* Bagian Bawah Footer */}
-            <div className="bg-footer-bottom-bg py-4 sm:py-6 text-white text-center relative">
-                <div className="container mx-auto px-4 flex justify-between items-center flex-col md:flex-row text-xs sm:text-sm">
-                    <p>Designed and Developed by ❤️</p>
-                </div>
+            {/* Bottom Bar */}
+            <div className="bg-gray-900 py-4 text-center text-gray-400 text-sm">
+                <p>© {new Date().getFullYear()} STAI Al-Hikmah Pariangan. All rights reserved.</p>
             </div>
         </footer>
     );

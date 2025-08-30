@@ -7,6 +7,7 @@ import FeatureCards from '@/Components/User/FeatureCards';
 import AboutSection from '@/Components/User/AboutSection';
 import CallToActionSection from '@/Components/User/CallToActionSection';
 import LatestNewsSection from '@/Components/User/LatestNewsSection';
+import HeaderRunningText from '@/Components/User/HeaderRunningText';
 import ScrollToTopButton from '@/Components/ScrollToTopButton';
 
 export default function Home({ navigations, news, faculties, sections }) {
@@ -35,9 +36,14 @@ export default function Home({ navigations, news, faculties, sections }) {
                 <meta name="twitter:image" content="/images/logo.png" />
             </Head>
 
+            <HeaderRunningText />
             <Navbar navigations={navigations} />
 
             {heroSection && <HeroSection data={heroSection.contents} />}
+
+            <div data-aos="fade-up" data-aos-delay="300">
+                <LatestNewsSection news={news} />
+            </div>
 
             <div data-aos="fade-up">
                 <FeatureCards />
@@ -55,9 +61,6 @@ export default function Home({ navigations, news, faculties, sections }) {
                 </div>
             )}
 
-            <div data-aos="fade-up" data-aos-delay="300">
-                <LatestNewsSection news={news} />
-            </div>
 
             <Footer news={news} faculties={faculties} />
             <ScrollToTopButton />

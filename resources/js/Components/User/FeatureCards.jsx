@@ -33,59 +33,58 @@ export default function FeatureCards() {
     ];
 
     return (
-        <section className="bg-section-bg py-12 sm:py-16 px-4">
+        <section className="relative bg-gradient-to-br from-[#002663] via-[#003b99] to-[#0050d4] py-10 sm:py-16 px-3 sm:px-6">
             <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8">
                     {features.map((feature, index) => (
                         <div
                             key={feature.id}
                             data-aos="fade-up"
                             data-aos-delay={index * 200}
-                            className="group relative p-6 sm:p-8 rounded-lg shadow-lg flex flex-col items-center text-center bg-white overflow-hidden
-                                       transition-all duration-300 ease-in-out hover:shadow-xl"
+                            className="group relative p-5 sm:p-8 rounded-2xl 
+                                       bg-white/10 backdrop-blur-md shadow-lg 
+                                       border border-white/20 flex flex-col items-center text-center 
+                                       transition-all duration-500 ease-in-out 
+                                       hover:scale-[1.03] hover:shadow-2xl hover:bg-white/20"
                         >
-                            <span className="absolute bottom-0 left-0 h-1 bg-custom-blue w-0 group-hover:w-full transition-all duration-500 ease-out"></span>
-
-                            <div className="relative z-10">
-                                <div className="mb-4 sm:mb-6">
-                                    <feature.icon className="w-12 h-12 sm:w-16 sm:h-16 text-gray-600 transition duration-300" />
-                                </div>
-
-                                <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-800 transition duration-300 cursor-pointer hover:text-custom-blue">
-                                    {feature.title}
-                                </h3>
-
-                                <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 transition duration-300">
-                                    {feature.description}
-                                </p>
-
-                                <a
-                                    target="_blank"
-                                    href={feature.link}
-                                    className="group/button relative inline-flex items-center justify-center px-5 py-2.5 sm:px-6 sm:py-3 rounded-full font-semibold transition-all duration-300
-                                               border border-gray-300 text-gray-700 bg-white overflow-hidden"
-                                >
-                                    <span className="absolute inset-0 bg-custom-blue -translate-x-full group-hover/button:translate-x-0 transition-transform duration-500 ease-in-out"></span>
-                                    <span className="relative z-10 flex items-center">
-                                        <span className="mr-2 group-hover/button:text-white transition-colors duration-300">
-                                            {feature.buttonText}
-                                        </span>
-                                        <svg
-                                            className="w-4 h-4 group-hover/button:text-white transition-transform duration-300 transform group-hover/button:translate-x-1"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M14 5l7 7m0 0l-7 7m7-7H3"
-                                            ></path>
-                                        </svg>
-                                    </span>
-                                </a>
+                            {/* Icon */}
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-white/20 mb-4 sm:mb-6 group-hover:bg-white/30 transition-all duration-500">
+                                <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white group-hover:scale-110 transition-transform duration-500" />
                             </div>
+
+                            {/* Title */}
+                            <h3 className="text-lg sm:text-2xl font-bold mb-3 sm:mb-4 text-white tracking-wide group-hover:text-yellow-300 transition-colors duration-500">
+                                {feature.title}
+                            </h3>
+
+                            {/* Description */}
+                            <p className="text-xs sm:text-base text-white/80 mb-6 sm:mb-8 leading-relaxed">
+                                {feature.description}
+                            </p>
+
+                            {/* Button */}
+                            <a
+                                target="_blank"
+                                href={feature.link}
+                                className="relative inline-flex items-center justify-center px-4 py-2 sm:px-6 sm:py-3 rounded-full font-semibold
+                                           bg-yellow-400 text-[#002663] shadow-md 
+                                           hover:bg-yellow-300 hover:shadow-lg transition-all duration-500 text-xs sm:text-base"
+                            >
+                                {feature.buttonText}
+                                <svg
+                                    className="w-4 h-4 sm:w-5 sm:h-5 ml-2 transform transition-transform duration-300 group-hover:translate-x-1"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                                    ></path>
+                                </svg>
+                            </a>
                         </div>
                     ))}
                 </div>
