@@ -28,7 +28,7 @@ export default function FeatureCards() {
             description:
                 "Informasi lengkap dan pendaftaran Penerimaan Mahasiswa Baru tahun ajaran ini.",
             buttonText: "Daftar Sekarang",
-            link: "",
+            link: "https://pmb.staialhikmahpariangan.ac.id/",
         },
     ];
 

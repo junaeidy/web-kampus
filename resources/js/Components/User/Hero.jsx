@@ -81,7 +81,8 @@ export default function HeroSection({ data }) {
                         Gabung Bersama Kami !!
                     </h2>
                     <a
-                        href="#"
+                        href="https://pmb.staialhikmahpariangan.ac.id/"
+                        target="_blank"
                         className="bg-[#FFDA00] text-[#002663] font-bold py-1.5 sm:py-2 px-4 sm:px-5 rounded-full shadow text-xs sm:text-sm md:text-base hover:bg-yellow-400 transition"
                     >
                         PMB KLIK DISINI »

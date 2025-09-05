@@ -29,7 +29,7 @@ export default function CallToActionSection({ data }) {
                 {data?.cta_link && (
                     <a
                         target="_blank"
-                        href={data.cta_link}
+                        href={data.cta_link || "https://pmb.staialhikmahpariangan.ac.id/"}
                         className="inline-flex items-center justify-center px-8 py-4 sm:px-10 sm:py-5 rounded-full font-semibold text-base sm:text-lg
                                    bg-white text-custom-blue shadow-md hover:shadow-xl hover:bg-gray-100 transition duration-300 transform hover:scale-105"
                         data-aos="fade-up"
